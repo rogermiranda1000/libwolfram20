@@ -1,8 +1,13 @@
+# libwolfram20
 C++ library for using API Wolfram|Alpha v2.0.
 Version 1.0
 
-Example: (using query)
+## Dependencies
+- [RapidXML](https://techoverflow.net/2019/04/17/how-to-install-rapidxml-on-ubuntu/)
 
+## Example (using query)
+
+```C++
 #include "Wolfram/WAEngine.h"
 ...
 WAEngine search;
@@ -12,11 +17,12 @@ search.query.addFormat("plaintext");
 
 string queryURL = search.getURL();
 ...
+```
 
 
+## Example (read parsed data)
 
-Example: (read parsed data)
-
+```C++
 WAEngine search;
 ...
 // Data from Wolfram|Alpha in 'data'
@@ -58,3 +64,4 @@ for (int i = 0; i < numPod; i++)
         cout << "\t\tName:" << states[j].getName() << endl;
     }
 }
+```

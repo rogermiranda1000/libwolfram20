@@ -10,7 +10,7 @@
 
 #include <string>
 
-#include <rapidxml_utils.hpp>
+#include <rapidxml/rapidxml_utils.hpp>
 
 #include "WAImage.h"
 

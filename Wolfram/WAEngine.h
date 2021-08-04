@@ -31,7 +31,7 @@
 #include <string>
 #include <fstream>
 
-#include <rapidxml_utils.hpp>
+#include <rapidxml/rapidxml_utils.hpp>
 
 #include "WAQuery.h"
 #include "WAPod.h"
