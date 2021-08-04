@@ -42,8 +42,7 @@ using namespace rapidxml;
 class WAEngine
 {
 public:
-    WAEngine();
-    WAEngine(string appid, string server, string path);
+    WAEngine(string appid, string server = "api.wolframalpha.com", string path = "/v2/query");
     virtual ~WAEngine();
 
     string  getAppID();

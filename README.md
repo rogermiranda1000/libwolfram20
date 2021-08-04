@@ -2,13 +2,15 @@
 C++ library for using API Wolfram|Alpha v2.0.
 Version 1.0
 
-## Dependencies
+## Setup
 - [RapidXML](https://techoverflow.net/2019/04/17/how-to-install-rapidxml-on-ubuntu/)
+- Place the directory 'Wolfram' into 'deps' folder
+- Add 'add_subdirectory(deps/Wolfram)' and 'target_link_libraries(<name> Wolfram)' to your CMakeLists.txt
 
 ## Example (using query)
 
 ```C++
-#include "Wolfram/WAEngine.h"
+#include "WAEngine.h"
 ...
 WAEngine search;
 search.query.setInput("text for search");

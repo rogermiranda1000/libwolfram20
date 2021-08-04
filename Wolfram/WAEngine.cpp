@@ -2,20 +2,11 @@
  *      WAEngine.cpp
  *
  *      Copyright 2011 Nikolenko Konstantin <knikolenko@yandex.ru>
+ *		Copyright 2021 Roger Miranda <contacto@rogermiranda1000.com>
  *
  */
 
 #include "WAEngine.h"
-
-/**
- * Constructor with default config
- */
-WAEngine::WAEngine()
-{
-    error = false;
-    this->server = "api.wolframalpha.com";
-    this->path   = "/v2/query";
-}
 
 /**
  * Constructor with another config
@@ -24,12 +15,12 @@ WAEngine::WAEngine()
  * @param server    Address of WolframAlpha server
  * @param path      Path to script on server
  */
-WAEngine::WAEngine(string appid, string server, string path)
-{
+WAEngine::WAEngine(string appid, string server, string path) {
     error = false;
     this->appID  = appid;
     this->server = server;
-    this->path   = path;
+    this->path = path;
+	this->data = nullptr;
 }
 
 WAEngine::~WAEngine()
@@ -39,7 +30,7 @@ WAEngine::~WAEngine()
         for (size_t i = 0; i < countPods; i++)
             Pods[i].~WAPod();
     }
-    free(data);
+    if (this->data != nullptr) free(this->data);
 }
 
 /**
@@ -94,12 +85,12 @@ WAEngine::getURL(WAQuery query)
 bool
 WAEngine::Parse()
 {
-    if ((data == NULL) || (length == 0))
+    if ((this->data == nullptr) || (length == 0))
     {
         return false;
     }
     xml_document<> root;
-    root.parse<0>(data);
+    root.parse<0>(this->data);
     xml_node<>* query = root.first_node("queryresult");
 
     //Get attributes queryresult
@@ -146,8 +137,8 @@ WAEngine::Parse(string filename)
     file.seekg(0, ios_base::beg);
 
     // Read file
-    data = (char*)malloc(length);
-    file.read(data, length);
+    this->data = (char*)malloc(length);
+    file.read(this->data, length);
 
     file.close();
 
@@ -166,7 +157,7 @@ WAEngine::Parse(string filename)
 bool
 WAEngine::Parse(char * inputData)
 {
-    data = inputData;
+    this->data = inputData;
     return Parse();
 }
 
