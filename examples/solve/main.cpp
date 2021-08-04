@@ -3,15 +3,20 @@
 
 int main(int argc, char const *argv[]) {
 	WAEngine search(APP_ID);
-	search.query.setInput("x-1=4");
 	search.query.addFormat("html");
 	search.query.addFormat("plaintext");
-	//search.setAppID(); // TODO
 
-	string queryURL = search.getURL();
+	search.query.setInput(std::string("What airplanes are flying overhead")); // TODO '?'
+	
+	std::cout << "Searching '" << search.getURL() << "'..." << std::endl;
+	if (!WAEngine::DownloadURL(search.getURL())) {
+		std::cerr << "Downloading error!" << std::endl;
+		return EXIT_FAILURE;
+	}
 
-	char *data;
-	search.Parse(data);
+	return 0;
+	
+	//search.Parse(data);
 	int numPod = search.getCountPods();
 	WAPod * pods = search.getPods();
 

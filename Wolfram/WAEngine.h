@@ -30,6 +30,7 @@
 #include <cstdlib>
 #include <string>
 #include <fstream>
+#include <curl/curl.h> // download website contents
 
 #include <rapidxml/rapidxml_utils.hpp>
 
@@ -58,6 +59,8 @@ public:
     WAPod*  getPods();
 
     bool    isError();
+	
+	static bool DownloadURL(string url);
 
     WAQuery query;
 
