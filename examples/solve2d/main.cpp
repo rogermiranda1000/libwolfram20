@@ -19,27 +19,22 @@ int main(int argc, char const *argv[]) {
 	
 	WAPod *response = search.getPod("Implicit plot");
 	if (response != nullptr) {
-		// Get a count of sub-blocks
-		int numSubPod = response->getCountSubpods();
-		int numStates = response->getCountStates();
-		
-		WASubpod * subpods = response->getSubpods();
-		WAPodState * states = response->getStates();
+		std::vector<WASubpod> subpods = response->getSubpods();
 		
 		// Enumerate a subpods
-		for (int j = 0; j < numSubPod; j++)
+		for (int j = 0; j < subpods.size(); j++)
 		{
 			cout << "SubPod "  << j << endl;
 			// Get a subpod attributes
 			cout << "\tTitle:"   << subpods[j].getTitle() << endl;
 			cout << "\tText:"   << subpods[j].getPlainText() << endl;
 			
-			// Get a built-in img attributes
-			// TODO segmentation fault
-			cout << "Img" << endl;
-			cout << "\tTitle:" << subpods[j].getImage()->getTitle() << endl;
-			cout << "\tSrc:"   << subpods[j].getImage()->getSrc() << endl;
-
+			if (subpods[j].hasImage()) {
+				// Get a built-in img attributes
+				cout << "Img" << endl;
+				cout << "\tTitle:" << subpods[j].getImage()->getTitle() << endl;
+				cout << "\tSrc:"   << subpods[j].getImage()->getSrc() << endl;
+			}
 		}
 	}
 	

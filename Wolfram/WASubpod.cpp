@@ -2,6 +2,7 @@
  *      WASubpod.cpp
  *
  *      Copyright 2011 Nikolenko Konstantin <knikolenko@yandex.ru>
+ *		Copyright 2021 Roger Miranda <contacto@rogermiranda1000.com>
  *
  */
 
@@ -37,10 +38,12 @@ WASubpod::getPlainText()
     return string(plain);
 }
 
-WAImage*
-WASubpod::getImage()
-{
+WAImage* WASubpod::getImage() {
     return img;
+}
+
+bool WASubpod::hasImage() {
+    return img != nullptr;
 }
 
 /**
@@ -60,11 +63,10 @@ void WASubpod::Parse(xml_node<>* subpod) {
     plain     = plainNode->value();
 
     // Reading 'img' block
-    if (img != nullptr) delete img;
-    img = nullptr;
     imgNode = subpod->first_node("img");
     if (imgNode != NULL)
     {
+		if (img != nullptr) delete img;
         img = new WAImage();
         img->Parse(imgNode);
     }

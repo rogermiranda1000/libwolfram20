@@ -2,6 +2,7 @@
  *      WAPodState.h
  *
  *      Copyright 2011 Nikolenko Konstantin <knikolenko@yandex.ru>
+ *		Copyright 2021 Roger Miranda <contacto@rogermiranda1000.com>
  *
  */
 
@@ -24,7 +25,7 @@ public:
     string  getName();      // Return 'name' attribute
     string  getInput();     // Return 'input' attribute
 
-    bool    Parse(xml_node<>* states);
+    void Parse(xml_node<>* states);
 protected:
 private:
     // Attributes of 'state'

@@ -9,6 +9,7 @@
 #define WAPOD_H
 
 #include <string>
+#include <vector>
 
 #include <rapidxml/rapidxml_utils.hpp>
 
@@ -22,7 +23,6 @@ class WAPod
 {
 public:
     WAPod() = default;
-    virtual ~WAPod();
 
     char	*getTitle();
 
@@ -30,11 +30,8 @@ public:
     int     getPosition();
     string  getID();
 
-    size_t  getCountSubpods();
-    WASubpod* getSubpods();
-
-    size_t  getCountStates();
-    WAPodState* getStates();
+    std::vector<WASubpod> getSubpods();
+    std::vector<WAPodState> getStates();
 
     bool    Parse(xml_node<>* pod);
 
@@ -45,11 +42,8 @@ private:
     char*   id;
     int     position;
 
-    size_t  countSubPods;   // Count of children node 'subpod'
-    WASubpod* SubPods;
-
-    size_t  countStates;    // Count of children node 'states'
-    WAPodState* States;
+    std::vector<WASubpod> SubPods;
+    std::vector<WAPodState> States;
 
 };
 

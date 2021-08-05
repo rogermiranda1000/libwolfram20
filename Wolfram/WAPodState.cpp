@@ -2,6 +2,7 @@
  *      WAPodState.cpp
  *
  *      Copyright 2011 Nikolenko Konstantin <knikolenko@yandex.ru>
+ *		Copyright 2021 Roger Miranda <contacto@rogermiranda1000.com>
  *
  */
 
@@ -23,8 +24,7 @@ WAPodState::~WAPodState()
  * @return Name of image
  */
 string
-WAPodState::getName()
-{
+WAPodState::getName() {
     return string(name);
 }
 
@@ -34,8 +34,7 @@ WAPodState::getName()
  * @return Input of image
  */
 string
-WAPodState::getInput()
-{
+WAPodState::getInput() {
     return string(input);
 }
 
@@ -43,13 +42,10 @@ WAPodState::getInput()
  * Parsing a input 'state' xml node
  *
  * @param   states XML Node of state
- * @return  false, if error
  */
-bool
-WAPodState::Parse(xml_node<>* states)
+void WAPodState::Parse(xml_node<>* states)
 {
     // Reading attribute
     name    = states->first_attribute("name")->value();
     input   = states->first_attribute("input")->value();
-    return true;
 }

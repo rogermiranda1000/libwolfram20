@@ -2,6 +2,7 @@
  *      WASubpod.h
  *
  *      Copyright 2011 Nikolenko Konstantin <knikolenko@yandex.ru>
+ *		Copyright 2021 Roger Miranda <contacto@rogermiranda1000.com>
  *
  */
 
@@ -27,8 +28,9 @@ public:
     string  getPlainText();     // Return included plaintext of subpods
 
     WAImage *getImage();
+	bool 	hasImage();
 
-    void	Parse(xml_node<>* subpod);
+    void Parse(xml_node<>* subpod);
 
 private:
     // Attributes of 'subpod'

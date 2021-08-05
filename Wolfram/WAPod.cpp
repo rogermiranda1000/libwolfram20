@@ -7,20 +7,6 @@
 
 #include "WAPod.h"
 
-WAPod::~WAPod()
-{
-    if (SubPods != NULL)
-    {
-        for (size_t i = 0; i < countSubPods; i++)
-            SubPods[i].~WASubpod();
-    }
-    if (States != NULL)
-    {
-        for (size_t i = 0; i < countStates; i++)
-            States[i].~WAPodState();
-    }
-}
-
 /**
  * Returns a 'title' attribute of Pod
  *
@@ -64,40 +50,12 @@ WAPod::getID()
     return string(id);
 }
 
-/**
- * Returns a count of 'subpod' blocks
- *
- * @return  count
- */
-size_t
-WAPod::getCountSubpods()
-{
-    return countSubPods;
-}
-
-WASubpod*
-WAPod::getSubpods()
-{
-    if (countSubPods == 0) return NULL;
+std::vector<WASubpod> WAPod::getSubpods() {
     return SubPods;
 }
 
-/**
- * Returns a count of 'state' blocks
- *
- * @return count
- */
-size_t
-WAPod::getCountStates()
-{
-    return countStates;
-}
-
-WAPodState*
-WAPod::getStates()
-{
-    if (countStates == 0) return NULL;
-    return States;
+std::vector<WAPodState> WAPod::getStates() {
+    return this->States;
 }
 
 /**
@@ -115,35 +73,29 @@ bool WAPod::Parse(xml_node<>* pod) {
     scanner = pod->first_attribute("scanner")->value();
     position = atoi(pod->first_attribute("title")->value());
 
-    countSubPods = atoi(pod->first_attribute("numsubpods")->value());
-    if (countSubPods > 0) {
-        // Reading a Subpods node
-        SubPods = new WASubpod[countSubPods];
+	// Reading a Subpods node
+	this->SubPods.clear();
 
-        xml_node<>* nodeSubpod = pod->first_node("subpod");
-        for(size_t i = 0; i < countSubPods; i++) {
-            SubPods[i].Parse(nodeSubpod);
-            nodeSubpod = nodeSubpod->next_sibling("subpod");
-        }
-    }
+	xml_node<>* nodeSubpod = pod->first_node("subpod");
+	for(size_t i = 0; i < atoi(pod->first_attribute("numsubpods")->value()); i++) {
+		WASubpod tmp;
+		tmp.Parse(nodeSubpod);
+		this->SubPods.push_back(tmp);
+		nodeSubpod = nodeSubpod->next_sibling("subpod");
+	}
 
     // Reading a States node
+	this->States.clear();
     xml_node<>* nodeStates = pod->first_node("states");
-    if (nodeStates != 0) {
-        countStates = atoi(nodeStates->first_attribute("count")->value());
-
-        if (countStates > 0) {
-            States = new WAPodState[countStates];
-            nodeStates = nodeStates->first_node("state");
-            for(size_t i = 0; i < countStates; i++) {
-                States[i].Parse(nodeStates);
-                nodeStates = nodeStates->next_sibling("state");
-            }
-        }
-    }
-    else {
-        // States not found
-        countStates = 0;
+    if (nodeStates != nullptr) {
+		size_t len = atoi(nodeStates->first_attribute("count")->value());
+		nodeStates = nodeStates->first_node("state");
+		for(size_t i = 0; i < len; i++) {
+			WAPodState tmp;
+			tmp.Parse(nodeStates);
+			this->States.push_back(tmp);
+			nodeStates = nodeStates->next_sibling("state");
+		}
     }
 	
     return true;
