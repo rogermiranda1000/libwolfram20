@@ -6,19 +6,23 @@ int main(int argc, char const *argv[]) {
 	search.query.addFormat("html");
 	search.query.addFormat("plaintext");
 
-	search.query.setInput(std::string("What airplanes are flying overhead")); // TODO '?'
+	search.query.setInput(std::string("3x+2=7")); // TODO '?'
 	
+	std::string contents;
 	std::cout << "Searching '" << search.getURL() << "'..." << std::endl;
-	if (!WAEngine::DownloadURL(search.getURL())) {
+	if (!WAEngine::DownloadURL(search.getURL(), &contents)) {
 		std::cerr << "Downloading error!" << std::endl;
 		return EXIT_FAILURE;
 	}
-
-	return 0;
 	
-	//search.Parse(data);
+	std::cout << contents << std::endl;
+	return 0;
+	search.Parse(contents);
 	int numPod = search.getCountPods();
-	WAPod * pods = search.getPods();
+	WAPod *pods = search.getPods();
+	// TODO buscar el pod 'title="Solution" scanner="Reduce"' para equaciones
+	// TODO buscar el pod 'title="Implicit plot" scanner="Inequality2D"' para ecuaciones 2d
+	// TODO buscar el pod 'title="Surface plot" scanner="Plot"' para ecuaciones 3d
 
 	for (int i = 0; i < numPod; i++)
 	{
@@ -53,4 +57,6 @@ int main(int argc, char const *argv[]) {
 			cout << "\t\tName:" << states[j].getName() << endl;
 		}
 	}
+	
+	return 0;
 }

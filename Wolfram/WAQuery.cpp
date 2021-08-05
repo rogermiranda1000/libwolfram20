@@ -25,8 +25,7 @@ WAQuery::~WAQuery()
  * @return Query
  */
 string WAQuery::toString() {
-	replace(this->input.begin(), this->input.end(), ' ', '+');
-    string q = string("&input=") + this->input;
+    string q = string("&input=") + WAQuery::parseInput(this->input);
 
     // Adding a vectors data to string
     q += VectorToStr("&format=",       false, this->formats);
@@ -37,6 +36,30 @@ string WAQuery::toString() {
     q += VectorToStr("&podindex=",     false, this->PodIndexes);
 
     return q;
+}
+
+/**
+ *	Characters on https://es.wikipedia.org/wiki/C%C3%B3digo_porciento
+ */
+static std::set<char> special_char = {'!', '#', '$', '&', '\'', '(', ')', '*', '+', ',', '/', ':', ';', '=', '?', '@', '[', ']'};
+
+/**
+ *	Given an string it creates a copy but with % code
+ */
+string WAQuery::parseInput(string str) {
+	std::stringstream result;
+	
+	string::iterator it;
+	for (it = str.begin(); it < str.end(); it++) {
+		if (special_char.find(*it) != special_char.end()) {
+			result << '%';
+			result << std::hex << (int)(*it);
+		}
+		else if (*it == ' ') result << '+'; // space is special; it should be '+'
+		else result << (*it);
+	}
+	
+	return result.str();
 }
 
 /**

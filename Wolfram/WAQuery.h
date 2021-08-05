@@ -9,7 +9,7 @@
 #define WAQUERY_H
 
 #include <string>
-#include <algorithm> // replace
+#include <set>
 #include <sstream>
 #include <vector>
 
@@ -107,6 +107,8 @@ private:
     // Template for concatenating item vector to string
     template <typename T> string VectorToStr(const char *prefix, bool individual, vector<T>& t);
     template <typename T> string VectorToStr(string prefix, bool individual, vector<T>& t);
+	
+	static string parseInput(string str);
 
     string  input;
 

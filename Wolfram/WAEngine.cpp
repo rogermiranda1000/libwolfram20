@@ -21,14 +21,12 @@ WAEngine::WAEngine(string appid, string server, string path) {
     this->path = path;
 	
     this->error = false;
-	this->data = nullptr;
 	this->Pods = nullptr;
 }
 
 WAEngine::~WAEngine()
 {
     if (this->Pods != nullptr) delete this->Pods;
-    if (this->data != nullptr) free(this->data);
 }
 
 /**
@@ -73,17 +71,14 @@ string WAEngine::getURL(WAQuery query) {
 }
 
 /**
- * Parsing a array of char 'data'
+ * Parsing data from a external array of char
  *
- * @return false, if a error
+ * @param   inputData  String containing the data
+ * @return  false, if a error
  */
-bool
-WAEngine::Parse()
-{
-    if ((this->data == nullptr) || (this->length == 0)) return false;
-    
+bool WAEngine::Parse(char *inputData) {
     xml_document<> root;
-    root.parse<0>(this->data);
+    root.parse<0>(inputData);
     xml_node<>* query = root.first_node("queryresult");
 
     //Get attributes queryresult
@@ -111,62 +106,26 @@ WAEngine::Parse()
 }
 
 /**
- * Parsing data from a text-file
- *
- * @param filename  Name of file for parsing
- * @return false, if a error
- */
-bool
-WAEngine::Parse(string filename)
-{
-    ifstream file;
-    file.open(filename.c_str(), ios::in);
-    if (file.fail()) return false;
-    // Get length of file
-    file.seekg(0, ios_base::end);
-    this->length = file.tellg();
-    file.seekg(0, ios_base::beg);
-
-    // Read file
-	if (this->data != nullptr) free(this->data);
-	this->data = nullptr;
-    this->data = (char*)malloc(this->length);
-	if (this->data == nullptr) return false; // no memory
-    file.read(this->data, this->length);
-
-    file.close();
-
-    // Parse data from file
-    Parse();
-
-    return true;
-}
-
-/**
  * Parsing data from a external array of char
  *
- * @param   inputData  Pointer to array of data
+ * @param   inputData  String containing the data
  * @return  false, if a error
  */
-bool
-WAEngine::Parse(char *inputData)
-{
-    this->data = inputData;
-	this->length = strlen(inputData);
-    return Parse();
+bool WAEngine::Parse(string inputData) {
+	return this->Parse((char*)inputData.c_str());
 }
 
-// TODO inside function?
 static size_t WriteCallback(void *contents, size_t size, size_t nmemb, void *userp) { 
     size_t realsize = size * nmemb;
 	((std::string*)userp)->append((char*)contents, realsize);
     return realsize;
 }
 
-bool WAEngine::DownloadURL(string url) {
+bool WAEngine::DownloadURL(string url, string *readBuffer) {
 	CURL *curl = nullptr;
 	CURLcode res;
-	std::string readBuffer;
+
+	readBuffer->clear();
 
 	curl = curl_easy_init();
 	if(curl == nullptr) {
@@ -176,7 +135,7 @@ bool WAEngine::DownloadURL(string url) {
 	
 	curl_easy_setopt(curl, CURLOPT_NOSIGNAL, 1L);
 	curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallback);
-    curl_easy_setopt(curl, CURLOPT_WRITEDATA, &readBuffer);
+    curl_easy_setopt(curl, CURLOPT_WRITEDATA, readBuffer);
 	curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
 	res = curl_easy_perform(curl);
 
@@ -186,8 +145,6 @@ bool WAEngine::DownloadURL(string url) {
 		cerr << "Response code " << res << endl;
 		return false;
 	}
-
-	cout << readBuffer << endl;
 	
 	return true;
 }

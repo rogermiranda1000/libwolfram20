@@ -29,8 +29,8 @@
 #include <iostream>
 #include <cstdlib>
 #include <string>
-#include <fstream>
-#include <curl/curl.h> // download website contents
+#include <curl/curl.h>	// download website contents
+#include <sstream>		// std::stringstream
 
 #include <rapidxml/rapidxml_utils.hpp>
 
@@ -51,16 +51,15 @@ public:
     string  getURL();
     string  getURL(WAQuery query);
 
-    bool    Parse();
-    bool    Parse(string filename);
-    bool    Parse(char * inputData);
+    bool 	Parse(char *inputData);
+    bool 	Parse(string inputData);
 
     int     getCountPods();
     WAPod*  getPods();
 
     bool    isError();
 	
-	static bool DownloadURL(string url);
+	static bool DownloadURL(string url, string *readBuffer);
 
     WAQuery query;
 
@@ -76,9 +75,6 @@ private:
 
     size_t  countPods;  // Count of blocks Pod
     WAPod * Pods;
-
-    char *  data;       // Text for parsing
-    size_t  length;     // Length of text, unused
 };
 
 #endif // WAENGINE_H
