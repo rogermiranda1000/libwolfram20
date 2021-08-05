@@ -16,10 +16,6 @@ int main(int argc, char const *argv[]) {
 	}
 	
 	search.Parse(contents);
-	int numPod = search.getCountPods();
-	
-	// TODO buscar el pod 'title="Implicit plot" scanner="Inequality2D"' para ecuaciones 2d
-	// TODO buscar el pod 'title="Surface plot" scanner="Plot"' para ecuaciones 3d
 	
 	WAPod *response = search.getPod("Solution");
 	if (response != nullptr) {
