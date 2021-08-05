@@ -2,15 +2,11 @@
  *      WAQuery.cpp
  *
  *      Copyright 2011 Nikolenko Konstantin <knikolenko@yandex.ru>
+ *		Copyright 2021 Roger Miranda <contacto@rogermiranda1000.com>
  *
  */
 
 #include "WAQuery.h"
-
-WAQuery::WAQuery()
-{
-    //ctor
-}
 
 WAQuery::~WAQuery()
 {
@@ -28,20 +24,42 @@ WAQuery::~WAQuery()
  *
  * @return Query
  */
-string
-WAQuery::toString()
-{
-    string q = "&input=" + replace(input, " ", "+");
+string WAQuery::toString() {
+    string q = string("&input=") + WAQuery::parseInput(this->input);
 
     // Adding a vectors data to string
-    q += VectorToStr("&format=",       false, formats);
-    q += VectorToStr("&includepodid=", true,  IncludePodIDs);
-    q += VectorToStr("&excludepodid=", true,  ExcludePodIDs);
-    q += VectorToStr("&podtitle=",     true,  PodTitle);
-    q += VectorToStr("&scanner=",      true,  PodScanners);
-    q += VectorToStr("&podindex=",     false, PodIndexes);
+    q += VectorToStr("&format=",       false, this->formats);
+    q += VectorToStr("&includepodid=", true,  this->IncludePodIDs);
+    q += VectorToStr("&excludepodid=", true,  this->ExcludePodIDs);
+    q += VectorToStr("&podtitle=",     true,  this->PodTitle);
+    q += VectorToStr("&scanner=",      true,  this->PodScanners);
+    q += VectorToStr("&podindex=",     false, this->PodIndexes);
 
     return q;
+}
+
+/**
+ *	Characters on https://es.wikipedia.org/wiki/C%C3%B3digo_porciento
+ */
+static std::set<char> special_char = {'!', '#', '$', '&', '\'', '(', ')', '*', '+', ',', '/', ':', ';', '=', '?', '@', '[', ']'};
+
+/**
+ *	Given an string it creates a copy but with % code
+ */
+string WAQuery::parseInput(string str) {
+	std::stringstream result;
+	
+	string::iterator it;
+	for (it = str.begin(); it < str.end(); it++) {
+		if (special_char.find(*it) != special_char.end()) {
+			result << '%';
+			result << std::hex << (int)(*it);
+		}
+		else if (*it == ' ') result << '+'; // space is special; it should be '+'
+		else result << (*it);
+	}
+	
+	return result.str();
 }
 
 /**
@@ -60,9 +78,7 @@ WAQuery::getInput()
  *
  * @param   input   Text for search
  */
-void
-WAQuery::setInput(string input)
-{
+void WAQuery::setInput(string input) {
     this->input = input;
 }
 
@@ -71,10 +87,17 @@ WAQuery::setInput(string input)
  *
  * @param   format String of format
  */
-void
-WAQuery::addFormat(string format)
-{
+void WAQuery::addFormat(string format) {
     this->formats.push_back(format);
+}
+
+/**
+ * Adding a string format
+ *
+ * @param   format String of format
+ */
+void WAQuery::addFormat(const char *format) {
+	this->addFormat(string(format));
 }
 
 /**
@@ -145,6 +168,18 @@ WAQuery::clearExcludePodIDs()
 {
     this->ExcludePodIDs.clear();
 }
+/**
+ * Concatenating a vector data to string
+ *
+ * @param   prefix      String prefix for data; example '&name='
+ * @param   individual  Type of concatenating string
+ * @param   t           Vector of data
+ * @return 	String with concatenated string
+ */
+template <typename T>
+string WAQuery::VectorToStr(const char *prefix, bool individual, vector<T>& t) {
+	return this->VectorToStr(string(prefix), individual, t);
+}
 
 /**
  * Concatenating a vector data to string
@@ -152,36 +187,31 @@ WAQuery::clearExcludePodIDs()
  * @param   prefix      String prefix for data; example '&name='
  * @param   individual  Type of concatenating string
  * @param   t           Vector of data
- * @return String with concatenated string
+ * @return 	String with concatenated string
  */
-template <typename T> string
-WAQuery::VectorToStr(const char * prefix, bool individual, vector<T>& t)
-{
-    string q = "";
+template <typename T>
+string WAQuery::VectorToStr(string prefix, bool individual, vector<T>& t) {
+    string q("");
     typename vector<T>::iterator tmpIter;
 
     if (t.size() == 0) return q;
 
-    if (individual)
-    {
+    if (individual) {
         // [prefix][data][prefix][data]
-        for (tmpIter = t.begin(); tmpIter < t.end(); tmpIter++)
-        {
-            q += prefix + *tmpIter;
+        for (tmpIter = t.begin(); tmpIter < t.end(); tmpIter++) {
+            q += prefix + to_string(*tmpIter);
         }
     }
-    else
-    {
+    else {
         // [prefix][data,data,data,...]
         q += prefix;
 
-        for (tmpIter = t.begin(); tmpIter < t.end(); tmpIter++)
-        {
+        for (tmpIter = t.begin(); tmpIter < t.end(); tmpIter++) {
             q += to_string(*tmpIter);
-            q += ",";
+            q += string(",");
         }
-        q[q.length()-1] = 0;        // Erase last ','
-
+        q.pop_back(); // Erase last ','
     }
+	
     return q;
 }

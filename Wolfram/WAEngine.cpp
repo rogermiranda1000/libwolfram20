@@ -2,20 +2,11 @@
  *      WAEngine.cpp
  *
  *      Copyright 2011 Nikolenko Konstantin <knikolenko@yandex.ru>
+ *		Copyright 2021 Roger Miranda <contacto@rogermiranda1000.com>
  *
  */
 
 #include "WAEngine.h"
-
-/**
- * Constructor with default config
- */
-WAEngine::WAEngine()
-{
-    error = false;
-    this->server = "api.wolframalpha.com";
-    this->path   = "/v2/query";
-}
 
 /**
  * Constructor with another config
@@ -24,22 +15,10 @@ WAEngine::WAEngine()
  * @param server    Address of WolframAlpha server
  * @param path      Path to script on server
  */
-WAEngine::WAEngine(string appid, string server, string path)
-{
-    error = false;
+WAEngine::WAEngine(string appid, string server, string path) {
     this->appID  = appid;
     this->server = server;
-    this->path   = path;
-}
-
-WAEngine::~WAEngine()
-{
-    if (Pods != NULL)
-    {
-        for (size_t i = 0; i < countPods; i++)
-            Pods[i].~WAPod();
-    }
-    free(data);
+    this->path = path;
 }
 
 /**
@@ -69,56 +48,38 @@ WAEngine::setAppID(string appid)
  *
  * @return URL
  */
-string
-WAEngine::getURL()
-{
-    return "http://" + server + path + "?" + "appid=" + appID + this->query.toString();
+string WAEngine::getURL() {
+    return this->getURL(this->query);
 }
 
 /**
  * Returns a URL for HTTP request, using a external WAQuery object
  *
+ * @param query Query to search
  * @return URL
  */
-string
-WAEngine::getURL(WAQuery query)
-{
-    return "http://" + server + path + "?" + "appid=" + appID + query.toString();
+string WAEngine::getURL(WAQuery query) {
+    return string("http://") + server + path + string("?appid=") + appID + query.toString();
 }
 
 /**
- * Parsing a array of char 'data'
+ * Parsing data from a external array of char
  *
- * @return false, if a error
+ * @param   inputData  String containing the data
+ * @return  false, if a error
  */
-bool
-WAEngine::Parse()
-{
-    if ((data == NULL) || (length == 0))
-    {
-        return false;
-    }
+bool WAEngine::Parse(char *inputData) {
     xml_document<> root;
-    root.parse<0>(data);
+    root.parse<0>(inputData);
     xml_node<>* query = root.first_node("queryresult");
 
-    //Get attributes queryresult
-    dataTypes = string(query->first_attribute("datatypes")->value());
-    version   = string(query->first_attribute("version")->value());
+    if (string(query->first_attribute("error")->value()) == "true") return false;
 
-    if (string(query->first_attribute("error")->value()) == "true")
-    {
-        this->error = true;
-    }
-
-    // Read Pods
-    countPods = atoi(query->first_attribute("numpods")->value());
-    Pods = new WAPod[countPods];
-
+	this->Pods.clear();
     xml_node<>* node = query->first_node("pod");
-    for(size_t i = 0; i < countPods; i++)
-    {
-        Pods[i].Parse(node);
+    for(size_t i = 0; i < atoi(query->first_attribute("numpods")->value()); i++) {
+		WAPod tmp;
+		if (tmp.Parse(node)) this->Pods.push_back(tmp);
         node = node->next_sibling("pod");
     }
 
@@ -126,48 +87,47 @@ WAEngine::Parse()
 }
 
 /**
- * Parsing data from a text-file
- *
- * @param filename  Name of file for parsing
- * @return false, if a error
- */
-bool
-WAEngine::Parse(string filename)
-{
-    ifstream file;
-    file.open(filename.c_str(), ios::in);
-    if (file.fail())
-    {
-        return false;
-    }
-    // Get length of file
-    file.seekg(0, ios_base::end);
-    length = file.tellg();
-    file.seekg(0, ios_base::beg);
-
-    // Read file
-    data = (char*)malloc(length);
-    file.read(data, length);
-
-    file.close();
-
-    // Parse data from file
-    Parse();
-
-    return true;
-}
-
-/**
  * Parsing data from a external array of char
  *
- * @param   inputData  Pointer to array of data
+ * @param   inputData  String containing the data
  * @return  false, if a error
  */
-bool
-WAEngine::Parse(char * inputData)
-{
-    data = inputData;
-    return Parse();
+bool WAEngine::Parse(string inputData) {
+	return this->Parse((char*)inputData.c_str());
+}
+
+static size_t WriteCallback(void *contents, size_t size, size_t nmemb, void *userp) { 
+    size_t realsize = size * nmemb;
+	((std::string*)userp)->append((char*)contents, realsize);
+    return realsize;
+}
+
+bool WAEngine::DownloadURL(string url, string *readBuffer) {
+	CURL *curl = nullptr;
+	CURLcode res;
+
+	readBuffer->clear();
+
+	curl = curl_easy_init();
+	if(curl == nullptr) {
+		cerr << "CURL init error!" << endl;
+		return false;
+	}
+	
+	curl_easy_setopt(curl, CURLOPT_NOSIGNAL, 1L);
+	curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallback);
+    curl_easy_setopt(curl, CURLOPT_WRITEDATA, readBuffer);
+	curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
+	res = curl_easy_perform(curl);
+
+	curl_easy_cleanup(curl);
+	
+	if (res != CURLE_OK) {
+		cerr << "Response code " << res << endl;
+		return false;
+	}
+	
+	return true;
 }
 
 /**
@@ -184,10 +144,21 @@ WAEngine::getCountPods()
 /**
  * Returns a array of Pod
  *
- * @return  pointer to array of Pod
+ * @return array of Pods
  */
-WAPod*
-WAEngine::getPods()
-{
+vector<WAPod> WAEngine::getPods() {
     return this->Pods;
+}
+
+/**
+ * Returns a Pod
+ *
+ * @return Pointer to the Pod with the specified title; nullptr if any
+ */
+WAPod *WAEngine::getPod(const char *title) {
+	vector<WAPod>::iterator it;
+	for (it = begin(this->Pods); it != end(this->Pods); it++) {
+		if (strcmp(it->getTitle(), title) == 0) return &(*it); // same title
+	}
+    return nullptr;
 }
