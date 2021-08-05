@@ -91,14 +91,17 @@ bool WAPod::Parse(xml_node<>* pod) {
     position = atoi(pod->first_attribute("title")->value());
 
 	xml_node<>* nodeMarkup = pod->first_node("markup")->first_node(); // CDATA is a separate element -> first_node()
-	std::cout << "value: " << nodeMarkup->value() << std::endl;
-	xml_node<>* imgNode = nodeMarkup->first_node("img");
+    for (char *val = nodeMarkup->value(); *val != '\0'; val++) {
+		if (*val == '\n' || *val == '\t') *val = ' ';
+	}
+    xml_document<> markup;
+    markup.parse<0>(nodeMarkup->value());
+	xml_node<>* imgNode = markup.first_node("img");
 	if (imgNode != NULL) {
 		if (this->img != nullptr) delete this->img;
 		
 		this->img = new WAImage();
-		this->img->Parse(nodeMarkup);
-		break;
+		this->img->Parse(imgNode);
 	}
 	
 	// Reading a Subpods node
