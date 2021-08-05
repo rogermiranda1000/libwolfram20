@@ -9,6 +9,7 @@
 #define WAQUERY_H
 
 #include <string>
+#include <set>
 #include <sstream>
 #include <vector>
 
@@ -18,7 +19,7 @@ using std::vector;
 class WAQuery
 {
 public:
-    WAQuery();
+    WAQuery() = default;
     virtual ~WAQuery();
 
     string  toString();
@@ -27,6 +28,7 @@ public:
     void    setInput(string input);
 
     void    addFormat(string format);
+	void 	addFormat(const char *format);
     void    clearFormats();
 
     ////////////  Location-related properties  /////////////
@@ -103,7 +105,10 @@ public:
 private:
 
     // Template for concatenating item vector to string
-    template <typename T> string  VectorToStr(const char * prefix, bool individual, vector<T>& t);
+    template <typename T> string VectorToStr(const char *prefix, bool individual, vector<T>& t);
+    template <typename T> string VectorToStr(string prefix, bool individual, vector<T>& t);
+	
+	static string parseInput(string str);
 
     string  input;
 
@@ -136,24 +141,6 @@ inline std::string to_string (const T& t)
     std::stringstream ss;
     ss << t;
     return ss.str();
-}
-
-/**
- * Find and replace a 's' to 'd' data in a string
- *
- * @param   text    Source string
- * @param   s       Substring to search
- * @param   d       Substring for replace
- * @return  Replaced string
- */
-inline std::string replace(std::string text, std::string s, std::string d)
-{
-    for(unsigned index = 0; index = text.find(s, index), index != std::string::npos;)
-    {
-        text.replace(index, s.length(), d);
-        index += d.length();
-    }
-    return text;
 }
 
 #endif // WAQUERY_H

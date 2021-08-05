@@ -7,14 +7,12 @@
 
 #include "WASubpod.h"
 
-WASubpod::WASubpod()
-{
-    img = NULL;
+WASubpod::WASubpod() {
+    img = nullptr;
 }
 
-WASubpod::~WASubpod()
-{
-    delete img;
+WASubpod::~WASubpod() {
+    if (img != nullptr) delete img;
 }
 
 /**
@@ -49,11 +47,8 @@ WASubpod::getImage()
  * Parsing a input 'subpod' xml node
  *
  * @param   subpod XML Node of subpod
- * @return  false, if error
  */
-bool
-WASubpod::Parse(xml_node<>* subpod)
-{
+void WASubpod::Parse(xml_node<>* subpod) {
     xml_node<>* plainNode;
     xml_node<>* imgNode;
 
@@ -65,11 +60,12 @@ WASubpod::Parse(xml_node<>* subpod)
     plain     = plainNode->value();
 
     // Reading 'img' block
+    if (img != nullptr) delete img;
+    img = nullptr;
     imgNode = subpod->first_node("img");
     if (imgNode != NULL)
     {
         img = new WAImage();
         img->Parse(imgNode);
     }
-    return true;
 }

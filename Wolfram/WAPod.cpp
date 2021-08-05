@@ -7,11 +7,6 @@
 
 #include "WAPod.h"
 
-WAPod::WAPod()
-{
-    error = false;
-}
-
 WAPod::~WAPod()
 {
     if (SubPods != NULL)
@@ -31,16 +26,9 @@ WAPod::~WAPod()
  *
  * @return  title
  */
-string
-WAPod::getTitle()
+char *WAPod::getTitle()
 {
-    return string(title);
-}
-
-bool
-WAPod::isError()
-{
-    return error;
+    return title;
 }
 
 /**
@@ -118,14 +106,9 @@ WAPod::getStates()
  * @param   pod XML Node of pod
  * @return  false, if error
  */
-bool
-WAPod::Parse(xml_node<>* pod)
-{
-    if (string(pod->first_attribute("error")->value()) == "true")
-    {
-        this->error = true;
-        return false;
-    }
+bool WAPod::Parse(xml_node<>* pod) {
+    if (string(pod->first_attribute("error")->value()) == "true") return false;
+	
     // Read arguments Pods node
     title   = pod->first_attribute("title")->value();
     id      = pod->first_attribute("id")->value();
@@ -133,14 +116,12 @@ WAPod::Parse(xml_node<>* pod)
     position = atoi(pod->first_attribute("title")->value());
 
     countSubPods = atoi(pod->first_attribute("numsubpods")->value());
-    if (countSubPods > 0)
-    {
+    if (countSubPods > 0) {
         // Reading a Subpods node
         SubPods = new WASubpod[countSubPods];
 
         xml_node<>* nodeSubpod = pod->first_node("subpod");
-        for(size_t i = 0; i < countSubPods; i++)
-        {
+        for(size_t i = 0; i < countSubPods; i++) {
             SubPods[i].Parse(nodeSubpod);
             nodeSubpod = nodeSubpod->next_sibling("subpod");
         }
@@ -148,25 +129,22 @@ WAPod::Parse(xml_node<>* pod)
 
     // Reading a States node
     xml_node<>* nodeStates = pod->first_node("states");
-    if (nodeStates != 0)
-    {
+    if (nodeStates != 0) {
         countStates = atoi(nodeStates->first_attribute("count")->value());
 
-        if (countStates > 0)
-        {
+        if (countStates > 0) {
             States = new WAPodState[countStates];
             nodeStates = nodeStates->first_node("state");
-            for(size_t i = 0; i < countStates; i++)
-            {
+            for(size_t i = 0; i < countStates; i++) {
                 States[i].Parse(nodeStates);
                 nodeStates = nodeStates->next_sibling("state");
             }
         }
     }
-    else
-    {
+    else {
         // States not found
         countStates = 0;
     }
+	
     return true;
 }

@@ -29,7 +29,9 @@
 #include <iostream>
 #include <cstdlib>
 #include <string>
-#include <fstream>
+#include <vector>
+#include <curl/curl.h>	// download website contents
+#include <sstream>		// std::stringstream
 
 #include <rapidxml/rapidxml_utils.hpp>
 
@@ -42,29 +44,27 @@ using namespace rapidxml;
 class WAEngine
 {
 public:
-    WAEngine();
-    WAEngine(string appid, string server, string path);
-    virtual ~WAEngine();
+    WAEngine(string appid, string server = "api.wolframalpha.com", string path = "/v2/query");
 
     string  getAppID();
     void    setAppID(string appid);
     string  getURL();
     string  getURL(WAQuery query);
 
-    bool    Parse();
-    bool    Parse(string filename);
-    bool    Parse(char * inputData);
+    bool 	Parse(char *inputData);
+    bool 	Parse(string inputData);
 
     int     getCountPods();
-    WAPod*  getPods();
+    vector<WAPod> getPods();
+	WAPod 	*getPod(const char *title);
 
     bool    isError();
+	
+	static bool DownloadURL(string url, string *readBuffer);
 
     WAQuery query;
 
 private:
-    int     error;
-
     string  server;     // Config of WolframAlpha address
     string  path;       // Config of WolframAlpha address
     string  appID;      // Config of WolframAlpha address
@@ -73,10 +73,7 @@ private:
     string  version;    // Attribute of 'queryresult'
 
     size_t  countPods;  // Count of blocks Pod
-    WAPod * Pods;
-
-    char *  data;       // Text for parsing
-    size_t  length;     // Length of text, unused
+    vector<WAPod> Pods;
 };
 
 #endif // WAENGINE_H
