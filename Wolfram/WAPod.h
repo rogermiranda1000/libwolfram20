@@ -2,6 +2,7 @@
  *      WAPod.h
  *
  *      Copyright 2011 Nikolenko Konstantin <knikolenko@yandex.ru>
+ *		Copyright 2021 Roger Miranda <contacto@rogermiranda1000.com>
  *
  */
 
@@ -22,13 +23,17 @@ using namespace rapidxml;
 class WAPod
 {
 public:
-    WAPod() = default;
+    WAPod();
+    ~WAPod();
 
     char	*getTitle();
 
     string  getScanner();
     int     getPosition();
     string  getID();
+	
+    WAImage *getImage();
+	bool 	hasImage();
 
     std::vector<WASubpod> getSubpods();
     std::vector<WAPodState> getStates();
@@ -44,7 +49,7 @@ private:
 
     std::vector<WASubpod> SubPods;
     std::vector<WAPodState> States;
-
+    WAImage* img;
 };
 
 #endif // WAPOD_H

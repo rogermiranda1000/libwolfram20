@@ -2,10 +2,19 @@
  *      WAPod.cpp
  *
  *      Copyright 2011 Nikolenko Konstantin <knikolenko@yandex.ru>
+ *		Copyright 2021 Roger Miranda <contacto@rogermiranda1000.com>
  *
  */
 
 #include "WAPod.h"
+
+WAPod::WAPod() {
+	this->img = nullptr;
+}
+
+WAPod::~WAPod() {
+	if (this->img != nullptr) delete this->img;
+}
 
 /**
  * Returns a 'title' attribute of Pod
@@ -50,6 +59,14 @@ WAPod::getID()
     return string(id);
 }
 
+WAImage* WAPod::getImage() {
+    return img;
+}
+
+bool WAPod::hasImage() {
+    return img != nullptr;
+}
+
 std::vector<WASubpod> WAPod::getSubpods() {
     return SubPods;
 }
@@ -73,9 +90,19 @@ bool WAPod::Parse(xml_node<>* pod) {
     scanner = pod->first_attribute("scanner")->value();
     position = atoi(pod->first_attribute("title")->value());
 
+	xml_node<>* nodeMarkup = pod->first_node("markup")->first_node(); // CDATA is a separate element -> first_node()
+	std::cout << "value: " << nodeMarkup->value() << std::endl;
+	xml_node<>* imgNode = nodeMarkup->first_node("img");
+	if (imgNode != NULL) {
+		if (this->img != nullptr) delete this->img;
+		
+		this->img = new WAImage();
+		this->img->Parse(nodeMarkup);
+		break;
+	}
+	
 	// Reading a Subpods node
 	this->SubPods.clear();
-
 	xml_node<>* nodeSubpod = pod->first_node("subpod");
 	for(size_t i = 0; i < atoi(pod->first_attribute("numsubpods")->value()); i++) {
 		WASubpod tmp;

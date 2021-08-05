@@ -20,6 +20,13 @@ int main(int argc, char const *argv[]) {
 	WAPod *response = search.getPod("Implicit plot");
 	if (response != nullptr) {
 		std::vector<WASubpod> subpods = response->getSubpods();
+			
+		if (response->hasImage()) {
+			// Get a built-in img attributes
+			cout << "Img" << endl;
+			cout << "\tTitle:" << response->getImage()->getTitle() << endl;
+			cout << "\tSrc:"   << response->getImage()->getSrc() << endl;
+		}
 		
 		// Enumerate a subpods
 		for (int j = 0; j < subpods.size(); j++)
