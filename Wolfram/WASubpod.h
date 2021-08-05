@@ -26,9 +26,9 @@ public:
     string  getTitle();         // Return attr 'title' of subpods
     string  getPlainText();     // Return included plaintext of subpods
 
-    WAImage* getImage();
+    WAImage *getImage();
 
-    bool    Parse(xml_node<>* subpod);
+    void	Parse(xml_node<>* subpod);
 
 private:
     // Attributes of 'subpod'

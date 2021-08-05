@@ -23,31 +23,7 @@ int main(int argc, char const *argv[]) {
 	
 	WAPod *response = search.getPod("Solution");
 	if (response != nullptr) {
-		int numSubPod = response->getCountSubpods();
-		int numStates = response->getCountStates();
-		
-		WASubpod * subpods = response->getSubpods();
-		WAPodState * states = response->getStates();
-		
-		// Enumerate a subpods
-		for (int j = 0; j < numSubPod; j++)
-		{
-			cout << "\tSubPod "  << j << endl;
-			// Get a subpod attributes
-			cout << "\t\tTitle:"   << subpods[j].getTitle() << endl;
-			// Get a built-in img attributes
-			cout << "\tImg" << endl;
-			cout << "\t\tTitle:" << subpods[j].getImage()->getTitle() << endl;
-			cout << "\t\tSrc:"   << subpods[j].getImage()->getSrc() << endl;
-
-		}
-		
-		// Enumerate a states
-		for (int j = 0; j < numStates; j++)
-		{
-			cout << "\tStates " << j << endl;
-			cout << "\t\tName:" << states[j].getName() << endl;
-		}
+		cout << "Solution: "   << response->getSubpods()[0].getPlainText() << endl;
 	}
 	
 	return 0;

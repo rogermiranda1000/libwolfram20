@@ -116,14 +116,12 @@ bool WAPod::Parse(xml_node<>* pod) {
     position = atoi(pod->first_attribute("title")->value());
 
     countSubPods = atoi(pod->first_attribute("numsubpods")->value());
-    if (countSubPods > 0)
-    {
+    if (countSubPods > 0) {
         // Reading a Subpods node
         SubPods = new WASubpod[countSubPods];
 
         xml_node<>* nodeSubpod = pod->first_node("subpod");
-        for(size_t i = 0; i < countSubPods; i++)
-        {
+        for(size_t i = 0; i < countSubPods; i++) {
             SubPods[i].Parse(nodeSubpod);
             nodeSubpod = nodeSubpod->next_sibling("subpod");
         }
@@ -131,25 +129,22 @@ bool WAPod::Parse(xml_node<>* pod) {
 
     // Reading a States node
     xml_node<>* nodeStates = pod->first_node("states");
-    if (nodeStates != 0)
-    {
+    if (nodeStates != 0) {
         countStates = atoi(nodeStates->first_attribute("count")->value());
 
-        if (countStates > 0)
-        {
+        if (countStates > 0) {
             States = new WAPodState[countStates];
             nodeStates = nodeStates->first_node("state");
-            for(size_t i = 0; i < countStates; i++)
-            {
+            for(size_t i = 0; i < countStates; i++) {
                 States[i].Parse(nodeStates);
                 nodeStates = nodeStates->next_sibling("state");
             }
         }
     }
-    else
-    {
+    else {
         // States not found
         countStates = 0;
     }
+	
     return true;
 }

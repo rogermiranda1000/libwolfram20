@@ -75,10 +75,10 @@ bool WAEngine::Parse(char *inputData) {
 
     if (string(query->first_attribute("error")->value()) == "true") return false;
 
-	WAPod tmp;
 	this->Pods.clear();
     xml_node<>* node = query->first_node("pod");
     for(size_t i = 0; i < atoi(query->first_attribute("numpods")->value()); i++) {
+		WAPod tmp;
 		if (tmp.Parse(node)) this->Pods.push_back(tmp);
         node = node->next_sibling("pod");
     }
