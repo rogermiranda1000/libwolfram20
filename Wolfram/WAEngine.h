@@ -29,6 +29,7 @@
 #include <iostream>
 #include <cstdlib>
 #include <string>
+#include <vector>
 #include <curl/curl.h>	// download website contents
 #include <sstream>		// std::stringstream
 
@@ -44,7 +45,6 @@ class WAEngine
 {
 public:
     WAEngine(string appid, string server = "api.wolframalpha.com", string path = "/v2/query");
-    virtual ~WAEngine();
 
     string  getAppID();
     void    setAppID(string appid);
@@ -55,7 +55,8 @@ public:
     bool 	Parse(string inputData);
 
     int     getCountPods();
-    WAPod*  getPods();
+    vector<WAPod> getPods();
+	WAPod 	*getPod(const char *title);
 
     bool    isError();
 	
@@ -64,8 +65,6 @@ public:
     WAQuery query;
 
 private:
-    int     error;
-
     string  server;     // Config of WolframAlpha address
     string  path;       // Config of WolframAlpha address
     string  appID;      // Config of WolframAlpha address
@@ -74,7 +73,7 @@ private:
     string  version;    // Attribute of 'queryresult'
 
     size_t  countPods;  // Count of blocks Pod
-    WAPod * Pods;
+    vector<WAPod> Pods;
 };
 
 #endif // WAENGINE_H

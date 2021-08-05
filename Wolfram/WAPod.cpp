@@ -7,11 +7,6 @@
 
 #include "WAPod.h"
 
-WAPod::WAPod()
-{
-    error = false;
-}
-
 WAPod::~WAPod()
 {
     if (SubPods != NULL)
@@ -31,16 +26,9 @@ WAPod::~WAPod()
  *
  * @return  title
  */
-string
-WAPod::getTitle()
+char *WAPod::getTitle()
 {
-    return string(title);
-}
-
-bool
-WAPod::isError()
-{
-    return error;
+    return title;
 }
 
 /**
@@ -118,14 +106,9 @@ WAPod::getStates()
  * @param   pod XML Node of pod
  * @return  false, if error
  */
-bool
-WAPod::Parse(xml_node<>* pod)
-{
-    if (string(pod->first_attribute("error")->value()) == "true")
-    {
-        this->error = true;
-        return false;
-    }
+bool WAPod::Parse(xml_node<>* pod) {
+    if (string(pod->first_attribute("error")->value()) == "true") return false;
+	
     // Read arguments Pods node
     title   = pod->first_attribute("title")->value();
     id      = pod->first_attribute("id")->value();

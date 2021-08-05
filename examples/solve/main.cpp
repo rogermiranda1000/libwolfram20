@@ -6,7 +6,7 @@ int main(int argc, char const *argv[]) {
 	search.query.addFormat("html");
 	search.query.addFormat("plaintext");
 
-	search.query.setInput(std::string("3x+2=7")); // TODO '?'
+	search.query.setInput(std::string("3x+2=7"));
 	
 	std::string contents;
 	std::cout << "Searching '" << search.getURL() << "'..." << std::endl;
@@ -15,27 +15,19 @@ int main(int argc, char const *argv[]) {
 		return EXIT_FAILURE;
 	}
 	
-	std::cout << contents << std::endl;
-	return 0;
 	search.Parse(contents);
 	int numPod = search.getCountPods();
-	WAPod *pods = search.getPods();
-	// TODO buscar el pod 'title="Solution" scanner="Reduce"' para equaciones
+	
 	// TODO buscar el pod 'title="Implicit plot" scanner="Inequality2D"' para ecuaciones 2d
 	// TODO buscar el pod 'title="Surface plot" scanner="Plot"' para ecuaciones 3d
-
-	for (int i = 0; i < numPod; i++)
-	{
-		cout << "Pod "   << i << endl;
-		cout << "Title:" << pods[i].getTitle() << endl;
-		cout << "ID:"    << pods[i].getID()    << endl;
-
-		// Get a count of sub-blocks
-		int numSubPod = pods[i].getCountSubpods();
-		int numStates = pods[i].getCountStates();
+	
+	WAPod *response = search.getPod("Solution");
+	if (response != nullptr) {
+		int numSubPod = response->getCountSubpods();
+		int numStates = response->getCountStates();
 		
-		WASubpod * subpods = pods[i].getSubpods();
-		WAPodState * states = pods[i].getStates();
+		WASubpod * subpods = response->getSubpods();
+		WAPodState * states = response->getStates();
 		
 		// Enumerate a subpods
 		for (int j = 0; j < numSubPod; j++)

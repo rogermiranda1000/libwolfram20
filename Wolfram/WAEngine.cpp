@@ -19,14 +19,6 @@ WAEngine::WAEngine(string appid, string server, string path) {
     this->appID  = appid;
     this->server = server;
     this->path = path;
-	
-    this->error = false;
-	this->Pods = nullptr;
-}
-
-WAEngine::~WAEngine()
-{
-    if (this->Pods != nullptr) delete this->Pods;
 }
 
 /**
@@ -81,24 +73,13 @@ bool WAEngine::Parse(char *inputData) {
     root.parse<0>(inputData);
     xml_node<>* query = root.first_node("queryresult");
 
-    //Get attributes queryresult
-    dataTypes = string(query->first_attribute("datatypes")->value());
-    version   = string(query->first_attribute("version")->value());
+    if (string(query->first_attribute("error")->value()) == "true") return false;
 
-    if (string(query->first_attribute("error")->value()) == "true")
-    {
-        this->error = true;
-    }
-
-    // Read Pods
-    countPods = atoi(query->first_attribute("numpods")->value());
-	if (this->Pods != nullptr) delete this->Pods;
-    this->Pods = new WAPod[countPods];
-
+	WAPod tmp;
+	this->Pods.clear();
     xml_node<>* node = query->first_node("pod");
-    for(size_t i = 0; i < countPods; i++)
-    {
-        this->Pods[i].Parse(node);
+    for(size_t i = 0; i < atoi(query->first_attribute("numpods")->value()); i++) {
+		if (tmp.Parse(node)) this->Pods.push_back(tmp);
         node = node->next_sibling("pod");
     }
 
@@ -163,10 +144,21 @@ WAEngine::getCountPods()
 /**
  * Returns a array of Pod
  *
- * @return  pointer to array of Pod
+ * @return array of Pods
  */
-WAPod*
-WAEngine::getPods()
-{
+vector<WAPod> WAEngine::getPods() {
     return this->Pods;
+}
+
+/**
+ * Returns a Pod
+ *
+ * @return Pointer to the Pod with the specified title; nullptr if any
+ */
+WAPod *WAEngine::getPod(const char *title) {
+	vector<WAPod>::iterator it;
+	for (it = begin(this->Pods); it != end(this->Pods); it++) {
+		if (strcmp(it->getTitle(), title) == 0) return &(*it); // same title
+	}
+    return nullptr;
 }

@@ -21,12 +21,11 @@ using namespace rapidxml;
 class WAPod
 {
 public:
-    WAPod();
+    WAPod() = default;
     virtual ~WAPod();
 
-    string  getTitle();
+    char	*getTitle();
 
-    bool    isError();
     string  getScanner();
     int     getPosition();
     string  getID();
@@ -40,8 +39,6 @@ public:
     bool    Parse(xml_node<>* pod);
 
 private:
-    bool    error;
-
     // Attributes of 'pod' node
     char*   title;
     char*   scanner;
