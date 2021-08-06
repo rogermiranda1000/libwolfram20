@@ -7,6 +7,7 @@
  *      WAImage.h
  *
  *      Copyright 2011 Nikolenko Konstantin <knikolenko@yandex.ru>
+ *		Copyright 2021 Roger Miranda <contacto@rogermiranda1000.com>
  *
  */
 
@@ -19,7 +20,7 @@ class WAImage
 {
 public:
     WAImage();
-    virtual ~WAImage();
+    WAImage(xml_node<>* imgNode);
 
     string  getSrc();
     string  getAlt();
@@ -27,7 +28,7 @@ public:
     size_t  getWidth();
     size_t  getHeight();
 
-    bool    Parse(xml_node<>* imgNode);
+    void    Parse(xml_node<>* imgNode);
 
 private:
     // Attributes of 'image' node

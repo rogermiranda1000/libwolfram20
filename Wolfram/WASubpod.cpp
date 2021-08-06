@@ -2,17 +2,23 @@
  *      WASubpod.cpp
  *
  *      Copyright 2011 Nikolenko Konstantin <knikolenko@yandex.ru>
+ *		Copyright 2021 Roger Miranda <contacto@rogermiranda1000.com>
  *
  */
 
 #include "WASubpod.h"
 
 WASubpod::WASubpod() {
-    img = nullptr;
+    this->img = nullptr;
+}
+
+WASubpod::WASubpod(xml_node<>* subpod) {
+    this->img = nullptr;
+	this->Parse(subpod);
 }
 
 WASubpod::~WASubpod() {
-    if (img != nullptr) delete img;
+    delete this->img;
 }
 
 /**
@@ -37,10 +43,12 @@ WASubpod::getPlainText()
     return string(plain);
 }
 
-WAImage*
-WASubpod::getImage()
-{
-    return img;
+WAImage* WASubpod::getImage() {
+    return this->img;
+}
+
+bool WASubpod::hasImage() {
+    return this->img != nullptr;
 }
 
 /**
@@ -60,12 +68,10 @@ void WASubpod::Parse(xml_node<>* subpod) {
     plain     = plainNode->value();
 
     // Reading 'img' block
-    if (img != nullptr) delete img;
-    img = nullptr;
     imgNode = subpod->first_node("img");
     if (imgNode != NULL)
     {
-        img = new WAImage();
-        img->Parse(imgNode);
+		delete this->img; // if someone call Parse() 2 times
+        this->img = new WAImage(imgNode);
     }
 }
