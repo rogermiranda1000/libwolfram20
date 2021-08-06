@@ -14,6 +14,13 @@ WAImage::WAImage() {
 	this->title = nullptr;
 }
 
+WAImage::WAImage(xml_node<>* imgNode) {
+	this->src = nullptr;
+	this->alt = nullptr;
+	this->title = nullptr;
+	this->Parse(imgNode);
+}
+
 /**
  * Returning a 'src' attribute of image
  *

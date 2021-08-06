@@ -8,14 +8,8 @@
 
 #include "WAPodState.h"
 
-WAPodState::WAPodState()
-{
-    //ctor
-}
-
-WAPodState::~WAPodState()
-{
-    //dtor
+WAPodState::WAPodState(xml_node<>* states) {
+    this->Parse(states);
 }
 
 /**

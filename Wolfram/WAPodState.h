@@ -19,8 +19,8 @@ using namespace rapidxml;
 class WAPodState
 {
 public:
-    WAPodState();
-    virtual ~WAPodState();
+    WAPodState() = default;
+    WAPodState(xml_node<>* states);
 
     string  getName();      // Return 'name' attribute
     string  getInput();     // Return 'input' attribute

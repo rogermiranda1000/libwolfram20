@@ -23,7 +23,7 @@ using namespace rapidxml;
 class WAPod
 {
 public:
-    WAPod();
+    WAPod() = default;
     ~WAPod();
 
     char	*getTitle();
@@ -31,12 +31,9 @@ public:
     string  getScanner();
     int     getPosition();
     string  getID();
-	
-    WAImage *getImage();
-	bool 	hasImage();
 
-    std::vector<WASubpod> getSubpods();
-    std::vector<WAPodState> getStates();
+    std::vector<WASubpod*> getSubpods();
+    std::vector<WAPodState*> getStates();
 
     bool    Parse(xml_node<>* pod);
 
@@ -47,9 +44,8 @@ private:
     char*   id;
     int     position;
 
-    std::vector<WASubpod> SubPods;
-    std::vector<WAPodState> States;
-    WAImage* img;
+    std::vector<WASubpod*> SubPods;
+    std::vector<WAPodState*> States;
 };
 
 #endif // WAPOD_H

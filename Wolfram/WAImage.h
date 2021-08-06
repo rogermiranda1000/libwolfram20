@@ -20,6 +20,7 @@ class WAImage
 {
 public:
     WAImage();
+    WAImage(xml_node<>* imgNode);
 
     string  getSrc();
     string  getAlt();

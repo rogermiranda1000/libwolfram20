@@ -21,6 +21,10 @@ WAEngine::WAEngine(string appid, string server, string path) {
     this->path = path;
 }
 
+WAEngine::~WAEngine() {
+	for (auto it : this->Pods) delete it;
+}
+
 /**
  * Returns a setted AppID
  *
@@ -61,24 +65,6 @@ string WAEngine::getURL() {
 string WAEngine::getURL(WAQuery query) {
     return string("http://") + server + path + string("?appid=") + appID + query.toString();
 }
-#include <iostream>
-/**
- * It replaces all the occurancies from a string
- * From https://stackoverflow.com/a/62233894/9178470
- * @param str String to change
- * @param regexp RegEx
- * @param index Parenthesis to use (0 for full match; 1 for first...)
- */
-void WAEngine::regex_replace(std::string *str, std::regex regexp, int index) {
-	std::smatch match;
-	auto start = str->cbegin();
-	while (std::regex_match(start, str->cend(), match, regexp)) {
-		std::cout << "Match" << std::endl;
-		str->replace(match.position(), match.length(), match[index]);
-		//start = str->cbegin() + match.position(); // TODO
-		break;
-	}
-}
 
 /**
  * Parsing data from a external array of char
@@ -87,21 +73,17 @@ void WAEngine::regex_replace(std::string *str, std::regex regexp, int index) {
  * @return  false, if a error
  */
 bool WAEngine::Parse(string inputData) {
-	// replace CDATA
-	std::regex cdata(CDATA_REGEX);
-	WAEngine::regex_replace(&inputData,cdata,1);
-	
     xml_document<> root;
     root.parse<0>((char*)inputData.c_str());
     xml_node<>* query = root.first_node("queryresult");
 
     if (string(query->first_attribute("error")->value()) == "true") return false;
 
-	this->Pods.clear();
+	//this->Pods.clear();
     xml_node<>* node = query->first_node("pod");
     for(size_t i = 0; i < atoi(query->first_attribute("numpods")->value()); i++) {
-		WAPod tmp;
-		if (tmp.Parse(node)) this->Pods.push_back(tmp);
+		WAPod *tmp = new WAPod();
+		if (tmp->Parse(node)) this->Pods.push_back(tmp);
         node = node->next_sibling("pod");
     }
 
@@ -143,22 +125,11 @@ bool WAEngine::DownloadURL(string url, string *readBuffer) {
 }
 
 /**
- * Returns a count of blocks "pod"
- *
- * @return  count of block
- */
-int
-WAEngine::getCountPods()
-{
-    return countPods;
-}
-
-/**
  * Returns a array of Pod
  *
  * @return array of Pods
  */
-vector<WAPod> WAEngine::getPods() {
+vector<WAPod*> WAEngine::getPods() {
     return this->Pods;
 }
 
@@ -168,9 +139,9 @@ vector<WAPod> WAEngine::getPods() {
  * @return Pointer to the Pod with the specified title; nullptr if any
  */
 WAPod *WAEngine::getPod(const char *title) {
-	vector<WAPod>::iterator it;
+	vector<WAPod*>::iterator it;
 	for (it = begin(this->Pods); it != end(this->Pods); it++) {
-		if (strcmp(it->getTitle(), title) == 0) return &(*it); // same title
+		if (strcmp((*it)->getTitle(), title) == 0) return *it; // same title
 	}
     return nullptr;
 }

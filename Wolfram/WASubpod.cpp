@@ -9,11 +9,16 @@
 #include "WASubpod.h"
 
 WASubpod::WASubpod() {
-    img = nullptr;
+    this->img = nullptr;
+}
+
+WASubpod::WASubpod(xml_node<>* subpod) {
+    this->img = nullptr;
+	this->Parse(subpod);
 }
 
 WASubpod::~WASubpod() {
-    if (img != nullptr) delete img;
+    delete this->img;
 }
 
 /**
@@ -39,11 +44,11 @@ WASubpod::getPlainText()
 }
 
 WAImage* WASubpod::getImage() {
-    return img;
+    return this->img;
 }
 
 bool WASubpod::hasImage() {
-    return img != nullptr;
+    return this->img != nullptr;
 }
 
 /**
@@ -66,8 +71,7 @@ void WASubpod::Parse(xml_node<>* subpod) {
     imgNode = subpod->first_node("img");
     if (imgNode != NULL)
     {
-		if (img != nullptr) delete img;
-        img = new WAImage();
-        img->Parse(imgNode);
+		delete this->img; // if someone call Parse() 2 times
+        this->img = new WAImage(imgNode);
     }
 }

@@ -52,6 +52,7 @@ class WAEngine
 {
 public:
     WAEngine(string appid, string server = "api.wolframalpha.com", string path = "/v2/query");
+	~WAEngine();
 
     string  getAppID();
     void    setAppID(string appid);
@@ -60,8 +61,7 @@ public:
 
     bool 	Parse(string inputData);
 
-    int     getCountPods();
-    vector<WAPod> getPods();
+    vector<WAPod*> getPods();
 	WAPod 	*getPod(const char *title);
 
     bool    isError();
@@ -71,8 +71,6 @@ public:
     WAQuery query;
 
 private:
-	static void regex_replace(std::string *str, std::regex regexp, int index);
-
     string  server;     // Config of WolframAlpha address
     string  path;       // Config of WolframAlpha address
     string  appID;      // Config of WolframAlpha address
@@ -80,8 +78,7 @@ private:
     string  dataTypes;  // Attribute of 'queryresult'
     string  version;    // Attribute of 'queryresult'
 
-    size_t  countPods;  // Count of blocks Pod
-    vector<WAPod> Pods;
+    vector<WAPod*> Pods;
 };
 
 #endif // WAENGINE_H

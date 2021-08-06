@@ -22,7 +22,8 @@ class WASubpod
 {
 public:
     WASubpod();
-    virtual ~WASubpod();
+	WASubpod(xml_node<>* subpod);
+    ~WASubpod();
 
     string  getTitle();         // Return attr 'title' of subpods
     string  getPlainText();     // Return included plaintext of subpods

@@ -8,12 +8,9 @@
 
 #include "WAPod.h"
 
-WAPod::WAPod() {
-	this->img = nullptr;
-}
-
 WAPod::~WAPod() {
-	if (this->img != nullptr) delete this->img;
+	for (auto it : this->SubPods) delete it;
+	for (auto it : this->States) delete it;
 }
 
 /**
@@ -59,19 +56,11 @@ WAPod::getID()
     return string(id);
 }
 
-WAImage* WAPod::getImage() {
-    return img;
-}
-
-bool WAPod::hasImage() {
-    return img != nullptr;
-}
-
-std::vector<WASubpod> WAPod::getSubpods() {
+std::vector<WASubpod*> WAPod::getSubpods() {
     return SubPods;
 }
 
-std::vector<WAPodState> WAPod::getStates() {
+std::vector<WAPodState*> WAPod::getStates() {
     return this->States;
 }
 
@@ -89,28 +78,12 @@ bool WAPod::Parse(xml_node<>* pod) {
     id      = pod->first_attribute("id")->value();
     scanner = pod->first_attribute("scanner")->value();
     position = atoi(pod->first_attribute("title")->value());
-
-	xml_node<>* nodeMarkup = pod->first_node("markup")->first_node(); // CDATA is a separate element -> first_node()
-    for (char *val = nodeMarkup->value(); *val != '\0'; val++) {
-		if (*val == '\n' || *val == '\t') *val = ' ';
-	}
-    xml_document<> markup;
-    markup.parse<0>(nodeMarkup->value());
-	xml_node<>* imgNode = markup.first_node("img");
-	if (imgNode != NULL) {
-		if (this->img != nullptr) delete this->img;
-		
-		this->img = new WAImage();
-		this->img->Parse(imgNode);
-	}
 	
 	// Reading a Subpods node
 	this->SubPods.clear();
 	xml_node<>* nodeSubpod = pod->first_node("subpod");
 	for(size_t i = 0; i < atoi(pod->first_attribute("numsubpods")->value()); i++) {
-		WASubpod tmp;
-		tmp.Parse(nodeSubpod);
-		this->SubPods.push_back(tmp);
+		this->SubPods.push_back(new WASubpod(nodeSubpod));
 		nodeSubpod = nodeSubpod->next_sibling("subpod");
 	}
 
@@ -121,9 +94,7 @@ bool WAPod::Parse(xml_node<>* pod) {
 		size_t len = atoi(nodeStates->first_attribute("count")->value());
 		nodeStates = nodeStates->first_node("state");
 		for(size_t i = 0; i < len; i++) {
-			WAPodState tmp;
-			tmp.Parse(nodeStates);
-			this->States.push_back(tmp);
+			this->States.push_back(new WAPodState(nodeStates));
 			nodeStates = nodeStates->next_sibling("state");
 		}
     }
