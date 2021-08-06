@@ -1,12 +1,13 @@
+#include <iostream>
 #include "WAEngine.h"
 #include "secrets.h" // place here #define APP_ID
 
 int main(int argc, char const *argv[]) {
 	WAEngine search(APP_ID);
-	search.query.addFormat("html");
-	search.query.addFormat("plaintext");
+	/*search.query.addFormat("html");
+	search.query.addFormat("plaintext");*/
 
-	search.query.setInput(std::string("3x+2=7"));
+	search.query.setInput(std::string("x^3 - 6x^2 + 4x + 12 = 32y"));
 	
 	std::string contents;
 	std::cout << "Searching '" << search.getURL() << "'..." << std::endl;
@@ -17,9 +18,10 @@ int main(int argc, char const *argv[]) {
 	
 	search.Parse(contents);
 	
-	WAPod *response = search.getPod("Solution");
+	WAPod *response = search.getPod("Implicit plot");
 	if (response != nullptr) {
-		cout << "Solution: "   << response->getSubpods()[0].getPlainText() << endl;
+		WASubpod *subpod = response->getSubpods()[0];
+		if (subpod->hasImage()) std::cout << "Graph: " << subpod->getImage()->getSrc() << std::endl;
 	}
 	
 	return 0;

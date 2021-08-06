@@ -32,11 +32,18 @@
 #include <vector>
 #include <curl/curl.h>	// download website contents
 #include <sstream>		// std::stringstream
+#include <regex>
 
 #include <rapidxml/rapidxml_utils.hpp>
 
 #include "WAQuery.h"
 #include "WAPod.h"
+
+#define CDATA_SPACE		"[ \n\t]*"
+#define CDATA_INIT 		"<!\\[CDATA\\[" CDATA_SPACE
+#define CDATA_END 		CDATA_SPACE "\\]\\]>"
+//#define CDATA_REGEX 	CDATA_INIT "((?:(?!" CDATA_END ").)*)" CDATA_END
+#define CDATA_REGEX 	CDATA_INIT "(.*?)" CDATA_END
 
 using namespace std;
 using namespace rapidxml;
@@ -45,17 +52,16 @@ class WAEngine
 {
 public:
     WAEngine(string appid, string server = "api.wolframalpha.com", string path = "/v2/query");
+	~WAEngine();
 
     string  getAppID();
     void    setAppID(string appid);
     string  getURL();
     string  getURL(WAQuery query);
 
-    bool 	Parse(char *inputData);
     bool 	Parse(string inputData);
 
-    int     getCountPods();
-    vector<WAPod> getPods();
+    vector<WAPod*> getPods();
 	WAPod 	*getPod(const char *title);
 
     bool    isError();
@@ -72,8 +78,7 @@ private:
     string  dataTypes;  // Attribute of 'queryresult'
     string  version;    // Attribute of 'queryresult'
 
-    size_t  countPods;  // Count of blocks Pod
-    vector<WAPod> Pods;
+    vector<WAPod*> Pods;
 };
 
 #endif // WAENGINE_H

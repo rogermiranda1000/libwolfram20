@@ -21,6 +21,10 @@ WAEngine::WAEngine(string appid, string server, string path) {
     this->path = path;
 }
 
+WAEngine::~WAEngine() {
+	for (auto it : this->Pods) delete it;
+}
+
 /**
  * Returns a setted AppID
  *
@@ -68,32 +72,22 @@ string WAEngine::getURL(WAQuery query) {
  * @param   inputData  String containing the data
  * @return  false, if a error
  */
-bool WAEngine::Parse(char *inputData) {
+bool WAEngine::Parse(string inputData) {
     xml_document<> root;
-    root.parse<0>(inputData);
+    root.parse<0>((char*)inputData.c_str());
     xml_node<>* query = root.first_node("queryresult");
 
     if (string(query->first_attribute("error")->value()) == "true") return false;
 
-	this->Pods.clear();
+	//this->Pods.clear();
     xml_node<>* node = query->first_node("pod");
     for(size_t i = 0; i < atoi(query->first_attribute("numpods")->value()); i++) {
-		WAPod tmp;
-		if (tmp.Parse(node)) this->Pods.push_back(tmp);
+		WAPod *tmp = new WAPod();
+		if (tmp->Parse(node)) this->Pods.push_back(tmp);
         node = node->next_sibling("pod");
     }
 
     return true;
-}
-
-/**
- * Parsing data from a external array of char
- *
- * @param   inputData  String containing the data
- * @return  false, if a error
- */
-bool WAEngine::Parse(string inputData) {
-	return this->Parse((char*)inputData.c_str());
 }
 
 static size_t WriteCallback(void *contents, size_t size, size_t nmemb, void *userp) { 
@@ -131,22 +125,11 @@ bool WAEngine::DownloadURL(string url, string *readBuffer) {
 }
 
 /**
- * Returns a count of blocks "pod"
- *
- * @return  count of block
- */
-int
-WAEngine::getCountPods()
-{
-    return countPods;
-}
-
-/**
  * Returns a array of Pod
  *
  * @return array of Pods
  */
-vector<WAPod> WAEngine::getPods() {
+vector<WAPod*> WAEngine::getPods() {
     return this->Pods;
 }
 
@@ -156,9 +139,9 @@ vector<WAPod> WAEngine::getPods() {
  * @return Pointer to the Pod with the specified title; nullptr if any
  */
 WAPod *WAEngine::getPod(const char *title) {
-	vector<WAPod>::iterator it;
+	vector<WAPod*>::iterator it;
 	for (it = begin(this->Pods); it != end(this->Pods); it++) {
-		if (strcmp(it->getTitle(), title) == 0) return &(*it); // same title
+		if (strcmp((*it)->getTitle(), title) == 0) return *it; // same title
 	}
     return nullptr;
 }
