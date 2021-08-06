@@ -1,3 +1,4 @@
+#include <iostream>
 #include "WAEngine.h"
 #include "secrets.h" // place here #define APP_ID
 
@@ -19,23 +20,8 @@ int main(int argc, char const *argv[]) {
 	
 	WAPod *response = search.getPod("Implicit plot");
 	if (response != nullptr) {
-		std::vector<WASubpod*> subpods = response->getSubpods();
-		
-		// Enumerate a subpods
-		for (int j = 0; j < subpods.size(); j++)
-		{
-			cout << "SubPod "  << j << endl;
-			// Get a subpod attributes
-			cout << "\tTitle:"   << subpods[j]->getTitle() << endl;
-			cout << "\tText:"   << subpods[j]->getPlainText() << endl;
-			
-			if (subpods[j]->hasImage()) {
-				// Get a built-in img attributes
-				cout << "Img" << endl;
-				cout << "\tTitle:" << subpods[j]->getImage()->getTitle() << endl;
-				cout << "\tSrc:"   << subpods[j]->getImage()->getSrc() << endl;
-			}
-		}
+		WASubpod *subpod = response->getSubpods()[0];
+		if (subpod->hasImage()) std::cout << "Graph: " << subpod->getImage()->getSrc() << std::endl;
 	}
 	
 	return 0;
