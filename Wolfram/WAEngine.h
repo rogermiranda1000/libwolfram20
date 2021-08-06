@@ -32,11 +32,18 @@
 #include <vector>
 #include <curl/curl.h>	// download website contents
 #include <sstream>		// std::stringstream
+#include <regex>
 
 #include <rapidxml/rapidxml_utils.hpp>
 
 #include "WAQuery.h"
 #include "WAPod.h"
+
+#define CDATA_SPACE		"[ \n\t]*"
+#define CDATA_INIT 		"<!\\[CDATA\\[" CDATA_SPACE
+#define CDATA_END 		CDATA_SPACE "\\]\\]>"
+//#define CDATA_REGEX 	CDATA_INIT "((?:(?!" CDATA_END ").)*)" CDATA_END
+#define CDATA_REGEX 	CDATA_INIT "(.*?)" CDATA_END
 
 using namespace std;
 using namespace rapidxml;
@@ -51,7 +58,6 @@ public:
     string  getURL();
     string  getURL(WAQuery query);
 
-    bool 	Parse(char *inputData);
     bool 	Parse(string inputData);
 
     int     getCountPods();
@@ -65,6 +71,8 @@ public:
     WAQuery query;
 
 private:
+	static void regex_replace(std::string *str, std::regex regexp, int index);
+
     string  server;     // Config of WolframAlpha address
     string  path;       // Config of WolframAlpha address
     string  appID;      // Config of WolframAlpha address

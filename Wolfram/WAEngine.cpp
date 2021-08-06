@@ -61,6 +61,24 @@ string WAEngine::getURL() {
 string WAEngine::getURL(WAQuery query) {
     return string("http://") + server + path + string("?appid=") + appID + query.toString();
 }
+#include <iostream>
+/**
+ * It replaces all the occurancies from a string
+ * From https://stackoverflow.com/a/62233894/9178470
+ * @param str String to change
+ * @param regexp RegEx
+ * @param index Parenthesis to use (0 for full match; 1 for first...)
+ */
+void WAEngine::regex_replace(std::string *str, std::regex regexp, int index) {
+	std::smatch match;
+	auto start = str->cbegin();
+	while (std::regex_match(start, str->cend(), match, regexp)) {
+		std::cout << "Match" << std::endl;
+		str->replace(match.position(), match.length(), match[index]);
+		//start = str->cbegin() + match.position(); // TODO
+		break;
+	}
+}
 
 /**
  * Parsing data from a external array of char
@@ -68,9 +86,13 @@ string WAEngine::getURL(WAQuery query) {
  * @param   inputData  String containing the data
  * @return  false, if a error
  */
-bool WAEngine::Parse(char *inputData) {
+bool WAEngine::Parse(string inputData) {
+	// replace CDATA
+	std::regex cdata(CDATA_REGEX);
+	WAEngine::regex_replace(&inputData,cdata,1);
+	
     xml_document<> root;
-    root.parse<0>(inputData);
+    root.parse<0>((char*)inputData.c_str());
     xml_node<>* query = root.first_node("queryresult");
 
     if (string(query->first_attribute("error")->value()) == "true") return false;
@@ -84,16 +106,6 @@ bool WAEngine::Parse(char *inputData) {
     }
 
     return true;
-}
-
-/**
- * Parsing data from a external array of char
- *
- * @param   inputData  String containing the data
- * @return  false, if a error
- */
-bool WAEngine::Parse(string inputData) {
-	return this->Parse((char*)inputData.c_str());
 }
 
 static size_t WriteCallback(void *contents, size_t size, size_t nmemb, void *userp) { 

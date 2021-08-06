@@ -6,7 +6,7 @@ int main(int argc, char const *argv[]) {
 	search.query.addFormat("html");
 	search.query.addFormat("plaintext");
 
-	search.query.setInput(std::string("3x^2+2y=7"));
+	search.query.setInput(std::string("x^3 - 6x^2 + 4x + 12 = 32y"));
 	
 	std::string contents;
 	std::cout << "Searching '" << search.getURL() << "'..." << std::endl;
