@@ -8,14 +8,7 @@ set(APP_ROOT_DIR ${CMAKE_CURRENT_SOURCE_DIR})
 set(APP_ROOT_WOLFRAM_DIR ${APP_ROOT_DIR}/../../Wolfram)
 include_directories(${APP_ROOT_WOLFRAM_DIR})
 
-add_library(Wolfram STATIC
-	${APP_ROOT_WOLFRAM_DIR}/WAEngine.cpp
-	${APP_ROOT_WOLFRAM_DIR}/WAImage.cpp
-	${APP_ROOT_WOLFRAM_DIR}/WAPod.cpp
-	${APP_ROOT_WOLFRAM_DIR}/WAPodState.cpp
-	${APP_ROOT_WOLFRAM_DIR}/WAQuery.cpp
-	${APP_ROOT_WOLFRAM_DIR}/WASubpod.cpp
-)
+add_subdirectory(${APP_ROOT_WOLFRAM_DIR} build)
 
 add_executable(solve main.cpp)
 
