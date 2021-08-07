@@ -97,6 +97,14 @@ static size_t WriteCallback(void *contents, size_t size, size_t nmemb, void *use
     return realsize;
 }
 
+/**
+ * Given an \p url it downloads its HTML contents
+ *
+ * @param[in]	url			URL to download
+ * @param[out]	readBuffer	Downloaded website
+ * @retval		TRUE		All OK
+ * @retval		FALSE		Error while downloading
+ */
 bool WAEngine::DownloadURL(std::string url, std::string *readBuffer) {
 	CURL *curl = nullptr;
 	CURLcode res;
