@@ -34,12 +34,6 @@
 #include "WAQuery.h"
 #include "WAPod.h"
 
-#define CDATA_SPACE		"[ \n\t]*"
-#define CDATA_INIT 		"<!\\[CDATA\\[" CDATA_SPACE
-#define CDATA_END 		CDATA_SPACE "\\]\\]>"
-//#define CDATA_REGEX 	CDATA_INIT "((?:(?!" CDATA_END ").)*)" CDATA_END
-#define CDATA_REGEX 	CDATA_INIT "(.*?)" CDATA_END
-
 using namespace rapidxml;
 
 /**

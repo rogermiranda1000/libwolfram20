@@ -113,7 +113,7 @@ bool WAEngine::DownloadURL(std::string url, std::string *readBuffer) {
 
 	curl = curl_easy_init();
 	if(curl == nullptr) {
-		cerr << "CURL init error!" << endl;
+		std::cerr << "CURL init error!" << std::endl;
 		return false;
 	}
 	
@@ -126,7 +126,7 @@ bool WAEngine::DownloadURL(std::string url, std::string *readBuffer) {
 	curl_easy_cleanup(curl);
 	
 	if (res != CURLE_OK) {
-		cerr << "Response code " << res << endl;
+		std::cerr << "Response code " << res << std::endl;
 		return false;
 	}
 	

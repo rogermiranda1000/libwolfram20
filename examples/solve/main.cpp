@@ -1,5 +1,6 @@
 #include "WAEngine.h"
 #include "secrets.h" // place here #define APP_ID
+#include <sstream>
 
 int main(int argc, char const *argv[]) {
 	WAEngine search(APP_ID);
@@ -19,7 +20,7 @@ int main(int argc, char const *argv[]) {
 	
 	WAPod *response = search.getPod("Solution");
 	if (response != nullptr) {
-		cout << "Solution: "   << response->getSubpods()[0]->getPlainText() << endl;
+		std::cout << "Solution: "   << response->getSubpods()[0]->getPlainText() << std::endl;
 	}
 	
 	return 0;
