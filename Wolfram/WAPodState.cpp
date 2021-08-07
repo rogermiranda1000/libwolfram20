@@ -1,14 +1,15 @@
-/*
- *      WAPodState.cpp
+/*********************************************************************
+ *		@file WAPodState.cpp
+ *      Wolfram Pod States
  *
- *      Copyright 2011 Nikolenko Konstantin <knikolenko@yandex.ru>
- *		Copyright 2021 Roger Miranda <contacto@rogermiranda1000.com>
- *
- */
+ *      @author 	Nikolenko Konstantin <knikolenko@yandex.ru>
+ *		@author 	Roger Miranda <contacto@rogermiranda1000.com>
+ *		@date		2011-2021
+ ********************************************************************/
 
 #include "WAPodState.h"
 
-WAPodState::WAPodState(xml_node<>* states) {
+WAPodState::WAPodState(rapidxml::xml_node<>* states) {
     this->Parse(states);
 }
 
@@ -17,9 +18,8 @@ WAPodState::WAPodState(xml_node<>* states) {
  *
  * @return Name of image
  */
-string
-WAPodState::getName() {
-    return string(name);
+std::string WAPodState::getName() {
+    return std::string(name);
 }
 
 /**
@@ -27,19 +27,17 @@ WAPodState::getName() {
  *
  * @return Input of image
  */
-string
-WAPodState::getInput() {
-    return string(input);
+std::string WAPodState::getInput() {
+    return std::string(input);
 }
 
 /**
  * Parsing a input 'state' xml node
  *
- * @param   states XML Node of state
+ * @param[in]	states	XML Node of state
  */
-void WAPodState::Parse(xml_node<>* states)
-{
+void WAPodState::Parse(rapidxml::xml_node<>* states) {
     // Reading attribute
-    name    = states->first_attribute("name")->value();
-    input   = states->first_attribute("input")->value();
+    name = states->first_attribute("name")->value();
+    input = states->first_attribute("input")->value();
 }

@@ -1,10 +1,11 @@
-/*
- *      WAPod.h
+/*********************************************************************
+ *		@file WAPod.h
+ *      Wolfram API content
  *
- *      Copyright 2011 Nikolenko Konstantin <knikolenko@yandex.ru>
- *		Copyright 2021 Roger Miranda <contacto@rogermiranda1000.com>
- *
- */
+ *      @author 	Nikolenko Konstantin <knikolenko@yandex.ru>
+ *		@author 	Roger Miranda <contacto@rogermiranda1000.com>
+ *		@date		2011-2021
+ ********************************************************************/
 
 #ifndef WAPOD_H
 #define WAPOD_H
@@ -17,32 +18,31 @@
 #include "WASubpod.h"
 #include "WAPodState.h"
 
-using std::string;
-using namespace rapidxml;
-
-class WAPod
-{
+/**
+ * Wolfram API content
+ */
+class WAPod {
 public:
     WAPod() = default;
     ~WAPod();
 
-    char	*getTitle();
+    char *getTitle();
 
-    string  getScanner();
-    int     getPosition();
-    string  getID();
+    std::string getScanner();
+    int getPosition();
+    std::string getID();
 
     std::vector<WASubpod*> getSubpods();
     std::vector<WAPodState*> getStates();
 
-    bool    Parse(xml_node<>* pod);
+    bool Parse(rapidxml::xml_node<>* pod);
 
 private:
     // Attributes of 'pod' node
-    char*   title;
-    char*   scanner;
-    char*   id;
-    int     position;
+    char* title;
+    char* scanner;
+    char* id;
+    int position;
 
     std::vector<WASubpod*> SubPods;
     std::vector<WAPodState*> States;

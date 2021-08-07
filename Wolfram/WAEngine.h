@@ -34,13 +34,10 @@
 #include "WAQuery.h"
 #include "WAPod.h"
 
-using namespace rapidxml;
-
 /**
- *		Wolfram API access point
+ * Wolfram API access point
  */
-class WAEngine
-{
+class WAEngine {
 public:
     WAEngine(std::string appID, std::string server = "api.wolframalpha.com", std::string path = "/v2/query");
 	~WAEngine();

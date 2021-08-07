@@ -1,10 +1,11 @@
-/*
- *      WAPod.cpp
+/*********************************************************************
+ *		@file WAPod.cpp
+ *      Wolfram API content
  *
- *      Copyright 2011 Nikolenko Konstantin <knikolenko@yandex.ru>
- *		Copyright 2021 Roger Miranda <contacto@rogermiranda1000.com>
- *
- */
+ *      @author 	Nikolenko Konstantin <knikolenko@yandex.ru>
+ *		@author 	Roger Miranda <contacto@rogermiranda1000.com>
+ *		@date		2011-2021
+ ********************************************************************/
 
 #include "WAPod.h"
 
@@ -18,8 +19,7 @@ WAPod::~WAPod() {
  *
  * @return  title
  */
-char *WAPod::getTitle()
-{
+char *WAPod::getTitle() {
     return title;
 }
 
@@ -28,10 +28,8 @@ char *WAPod::getTitle()
  *
  * @return  scanner
  */
-string
-WAPod::getScanner()
-{
-    return string(scanner);
+std::string WAPod::getScanner() {
+    return std::string(scanner);
 }
 
 /**
@@ -39,9 +37,7 @@ WAPod::getScanner()
  *
  * @return  position
  */
-int
-WAPod::getPosition()
-{
+int WAPod::getPosition() {
     return position;
 }
 
@@ -50,9 +46,7 @@ WAPod::getPosition()
  *
  * @return  ID
  */
-string
-WAPod::getID()
-{
+std::string WAPod::getID() {
     return string(id);
 }
 
@@ -67,11 +61,12 @@ std::vector<WAPodState*> WAPod::getStates() {
 /**
  * Parsing a input 'pod' xml node
  *
- * @param   pod XML Node of pod
- * @return  false, if error
+ * @param[in]	pod			XML Node of pod
+ * @retval		TRUE		All OK
+ * @retval		FALSE		Parse failed
  */
-bool WAPod::Parse(xml_node<>* pod) {
-    if (string(pod->first_attribute("error")->value()) == "true") return false;
+bool WAPod::Parse(rapidxml::xml_node<>* pod) {
+    if (std::string(pod->first_attribute("error")->value()) == "true") return false;
 	
     // Read arguments Pods node
     title   = pod->first_attribute("title")->value();
