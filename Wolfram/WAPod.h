@@ -19,7 +19,9 @@
 #include "WAPodState.h"
 
 /**
- * Wolfram API content
+ * Wolfram API content.
+ * Each pod contains a piece or category of information about the given query.
+ * More information [on Wolfram documentation](https://products.wolframalpha.com/api/documentation/#result-pod)
  */
 class WAPod {
 public:

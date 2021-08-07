@@ -14,6 +14,10 @@
 
 #include <rapidxml/rapidxml_utils.hpp>
 
+/**
+ * Subelement of WAPod or WASubpod.
+ * More information [on Wolfram documentation](https://products.wolframalpha.com/api/documentation/#result-states)
+ */
 class WAPodState {
 public:
     WAPodState() = default;
