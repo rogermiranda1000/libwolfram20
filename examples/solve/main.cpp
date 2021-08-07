@@ -19,7 +19,7 @@ int main(int argc, char const *argv[]) {
 	
 	WAPod *response = search.getPod("Solution");
 	if (response != nullptr) {
-		cout << "Solution: "   << response->getSubpods()[0].getPlainText() << endl;
+		cout << "Solution: "   << response->getSubpods()[0]->getPlainText() << endl;
 	}
 	
 	return 0;

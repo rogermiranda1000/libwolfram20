@@ -11,3 +11,6 @@ Version 1.1
 ## Examples
 - [Simple equation solver](https://github.com/rogermiranda1000/libwolfram20/tree/master/examples/solve)
 - [2d equation plotter](https://github.com/rogermiranda1000/libwolfram20/tree/master/examples/solve2d)
+
+## Docs
+- [libwolfram20 documentation](https://rogermiranda1000.com/libwolfram20/annotated.html)
