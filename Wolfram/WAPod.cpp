@@ -9,6 +9,18 @@
 
 #include "WAPod.h"
 
+/**
+ * It generates the object with the \b pod
+ *
+ * @param[in]	pod			XML Node of pod
+ */
+WAPod::WAPod(rapidxml::xml_node<>* pod) {
+	this->parse(pod);
+}
+
+/**
+ * It frees the Subpods and States
+ */
 WAPod::~WAPod() {
 	for (auto it : this->SubPods) delete it;
 	for (auto it : this->States) delete it;
@@ -50,10 +62,20 @@ std::string WAPod::getID() {
     return string(id);
 }
 
+/**
+ * Returns all the getted subpods
+ *
+ * @return  Subpods
+ */
 std::vector<WASubpod*> WAPod::getSubpods() {
     return SubPods;
 }
 
+/**
+ * Returns all the getted states
+ *
+ * @return  States
+ */
 std::vector<WAPodState*> WAPod::getStates() {
     return this->States;
 }
@@ -61,21 +83,22 @@ std::vector<WAPodState*> WAPod::getStates() {
 /**
  * Parsing a input 'pod' xml node
  *
+ * @pre	You must call this function only once (called my the constructor)
  * @param[in]	pod			XML Node of pod
- * @retval		TRUE		All OK
- * @retval		FALSE		Parse failed
  */
-bool WAPod::Parse(rapidxml::xml_node<>* pod) {
-    if (std::string(pod->first_attribute("error")->value()) == "true") return false;
+void WAPod::parse(rapidxml::xml_node<>* pod) {
+    if (std::string(pod->first_attribute("error")->value()) == "true") {
+		this->error = true;
+		return;
+	}
 	
     // Read arguments Pods node
-    title   = pod->first_attribute("title")->value();
-    id      = pod->first_attribute("id")->value();
+    title = pod->first_attribute("title")->value();
+    id = pod->first_attribute("id")->value();
     scanner = pod->first_attribute("scanner")->value();
     position = atoi(pod->first_attribute("title")->value());
 	
 	// Reading a Subpods node
-	this->SubPods.clear();
 	xml_node<>* nodeSubpod = pod->first_node("subpod");
 	for(size_t i = 0; i < atoi(pod->first_attribute("numsubpods")->value()); i++) {
 		this->SubPods.push_back(new WASubpod(nodeSubpod));
@@ -83,7 +106,6 @@ bool WAPod::Parse(rapidxml::xml_node<>* pod) {
 	}
 
     // Reading a States node
-	this->States.clear();
     xml_node<>* nodeStates = pod->first_node("states");
     if (nodeStates != nullptr) {
 		size_t len = atoi(nodeStates->first_attribute("count")->value());
@@ -93,6 +115,4 @@ bool WAPod::Parse(rapidxml::xml_node<>* pod) {
 			nodeStates = nodeStates->next_sibling("state");
 		}
     }
-	
-    return true;
 }

@@ -14,7 +14,7 @@ WAPodState::WAPodState(rapidxml::xml_node<>* states) {
 }
 
 /**
- * Returning a 'name' attribute of state
+ * Returning the name of the state
  *
  * @return Name of image
  */

@@ -15,23 +15,23 @@
 #include <rapidxml/rapidxml_utils.hpp>
 
 /**
- * Subelement of WAPod or WASubpod.
- * More information [on Wolfram documentation](https://products.wolframalpha.com/api/documentation/#result-states)
+ * Contains a particular pod state for a single pod or subpod.
+ * More information [on Wolfram documentation](https://products.wolframalpha.com/api/documentation/#result-state)
  */
 class WAPodState {
 public:
     WAPodState() = default;
     WAPodState(rapidxml::xml_node<>* states);
 
-    std::string getName();      // Return 'name' attribute
-    std::string getInput();     // Return 'input' attribute
+    std::string getName();
+    std::string getInput();
 
     void Parse(rapidxml::xml_node<>* states);
 	
 private:
     // Attributes of 'state'
-    char* name;
-    char* input;
+    char* name;					//!< Describes the pod state
+    char* input;				//!< It can be used to modify subsequent queries
 };
 
 #endif // WAPODSTATE_H

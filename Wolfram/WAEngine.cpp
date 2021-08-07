@@ -23,40 +23,6 @@ WAEngine::WAEngine(std::string appID, std::string server, std::string path) {
 }
 
 /**
- * Destructor; it frees the Pods
- */
-WAEngine::~WAEngine() {
-	for (auto it : this->Pods) delete it;
-}
-
-/**
- * Returns a setted AppID
- *
- * @return AppID
- */
-std::string WAEngine::getAppID() {
-    return this->appID;
-}
-
-/**
- * Set another AppID
- *
- * @param[in]	appID	Another AppID
- */
-void WAEngine::setAppID(std::string appID) {
-    this->appID = appID;
-}
-
-/**
- * Returns a URL for HTTP request, using a internal WAQuery object
- *
- * @return URL to get the query, using the app ID
- */
-std::string WAEngine::getURL() {
-    return this->getURL(this->query);
-}
-
-/**
  * Returns a URL for HTTP request, using a external WAQuery object
  *
  * @param[in]	query	Query to search
@@ -66,29 +32,24 @@ std::string WAEngine::getURL(WAQuery query) {
     return std::string("http://") + server + path + std::string("?appid=") + appID + query.toString();
 }
 
+std::string WAEngine::getURL(std::string input) {
+	WAQuery query;
+	query.setInput(input);
+	return this->getURL(query);
+}
+
 /**
  * Parsing data from a external array of char
  *
  * @param   inputData	String containing the data
- * @retval	TRUE		All OK
- * @retval	FALSE		Parse failed
+ * @return				The parsed object indicated by \b inputData
  */
-bool WAEngine::Parse(std::string inputData) {
-    xml_document<> root;
+WAResult WAEngine::getResult(std::string inputData) {
+    rapidxml::xml_document<> root;
     root.parse<0>((char*)inputData.c_str());
-    xml_node<>* query = root.first_node("queryresult");
+    rapidxml::xml_node<>* query = root.first_node("queryresult");
 
-    if (std::string(query->first_attribute("error")->value()) == "true") return false;
-
-	//this->Pods.clear();
-    xml_node<>* node = query->first_node("pod");
-    for(size_t i = 0; i < atoi(query->first_attribute("numpods")->value()); i++) {
-		WAPod *tmp = new WAPod();
-		if (tmp->Parse(node)) this->Pods.push_back(tmp);
-        node = node->next_sibling("pod");
-    }
-
-    return true;
+    return WAResult(query);
 }
 
 /**
@@ -134,29 +95,4 @@ bool WAEngine::DownloadURL(std::string url, std::string *readBuffer) {
 	}
 	
 	return true;
-}
-
-/**
- * Returns the getted array of Pods of the previous query
- *
- * @pre Call \ref Parse
- * @return Getted Pods
- */
-std::vector<WAPod*> WAEngine::getPods() {
-    return this->Pods;
-}
-
-/**
- * Returns a Pod matching the \p title
- *
- * @param[in]	title	Title to search on the getted Pods
- * @return 				Pointer to the Pod with the specified title
- * @retval		nullptr	No Pod found
- */
-WAPod *WAEngine::getPod(const char *title) {
-	vector<WAPod*>::iterator it;
-	for (it = begin(this->Pods); it != end(this->Pods); it++) {
-		if (strcmp((*it)->getTitle(), title) == 0) return *it; // same title
-	}
-    return nullptr;
 }
