@@ -1,27 +1,22 @@
-/*
+/****************************************************************************
+ *		@mainpage	libwolfram20
  *      Library for using Wolfram|Alpha API v2.0
  *
- *      Version of library: 1.0
+ *      @version 	2.0
+ *      @author 	Nikolenko Konstantin <knikolenko@yandex.ru>
+ *		@author 	Roger Miranda <contacto@rogermiranda1000.com>
+ *		@date		2011-2021
+ *		@copyright 	GNU General Public License
+ ***************************************************************************/
+
+/****************************************************************************
+ *		@file 		WAEngine.h
+ *      Wolfram API access point
  *
- *      WAEngine.h
- *
- *      Copyright 2011 Nikolenko Konstantin <knikolenko@yandex.ru>
- *
- *      This program is free software; you can redistribute it and/or modify
- *      it under the terms of the GNU General Public License as published by
- *      the Free Software Foundation; either version 2 of the License, or
- *      (at your option) any later version.
- *
- *      This program is distributed in the hope that it will be useful,
- *      but WITHOUT ANY WARRANTY; without even the implied warranty of
- *      MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *      GNU General Public License for more details.
- *
- *      You should have received a copy of the GNU General Public License
- *      along with this program; if not, write to the Free Software
- *      Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
- *      MA 02110-1301, USA.
- */
+ *      @author 	Nikolenko Konstantin <knikolenko@yandex.ru>
+ *		@author 	Roger Miranda <contacto@rogermiranda1000.com>
+ *		@date		2011-2021
+ ***************************************************************************/
 
 #ifndef WAENGINE_H
 #define WAENGINE_H
@@ -45,40 +40,42 @@
 //#define CDATA_REGEX 	CDATA_INIT "((?:(?!" CDATA_END ").)*)" CDATA_END
 #define CDATA_REGEX 	CDATA_INIT "(.*?)" CDATA_END
 
-using namespace std;
 using namespace rapidxml;
 
+/**
+ *		Wolfram API access point
+ */
 class WAEngine
 {
 public:
-    WAEngine(string appid, string server = "api.wolframalpha.com", string path = "/v2/query");
+    WAEngine(std::string appID, std::string server = "api.wolframalpha.com", std::string path = "/v2/query");
 	~WAEngine();
 
-    string  getAppID();
-    void    setAppID(string appid);
-    string  getURL();
-    string  getURL(WAQuery query);
+    std::string getAppID();
+    void setAppID(std::string appID);
+    std::string getURL();
+    std::string getURL(WAQuery query);
 
-    bool 	Parse(string inputData);
+    bool Parse(string inputData);
 
     vector<WAPod*> getPods();
-	WAPod 	*getPod(const char *title);
+	WAPod *getPod(const char *title);
 
-    bool    isError();
+    bool isError();
 	
-	static bool DownloadURL(string url, string *readBuffer);
+	static bool DownloadURL(std::string url, std::string *readBuffer);
 
     WAQuery query;
 
 private:
-    string  server;     // Config of WolframAlpha address
-    string  path;       // Config of WolframAlpha address
-    string  appID;      // Config of WolframAlpha address
+    std::string server;     	//!< Config of WolframAlpha address
+    std::string path;       	//!< Config of WolframAlpha address
+    std::string appID;      	//!< Config of WolframAlpha address
 
-    string  dataTypes;  // Attribute of 'queryresult'
-    string  version;    // Attribute of 'queryresult'
+    std::string dataTypes;  	//!< Attribute of 'queryresult'
+    std::string version;    	//!< Attribute of 'queryresult'
 
-    vector<WAPod*> Pods;
+    std::vector<WAPod*> Pods;	//!< All the valid results of the query
 };
 
 #endif // WAENGINE_H

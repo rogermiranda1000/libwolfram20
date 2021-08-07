@@ -1,26 +1,30 @@
-/*
- *      WAEngine.cpp
+/*********************************************************************
+ *		@file WAEngine.cpp
+ *      Wolfram API access point
  *
- *      Copyright 2011 Nikolenko Konstantin <knikolenko@yandex.ru>
- *		Copyright 2021 Roger Miranda <contacto@rogermiranda1000.com>
- *
- */
+ *      @author 	Nikolenko Konstantin <knikolenko@yandex.ru>
+ *		@author 	Roger Miranda <contacto@rogermiranda1000.com>
+ *		@date		2011-2021
+ ********************************************************************/
 
 #include "WAEngine.h"
 
 /**
  * Constructor with another config
  *
- * @param appid     AppID, for using WolframAlpha
- * @param server    Address of WolframAlpha server
- * @param path      Path to script on server
+ * @param[in] 	appID 	AppID, for using WolframAlpha
+ * @param[in] 	server 	Address of WolframAlpha server
+ * @param[in] 	path 	Path to script on server
  */
-WAEngine::WAEngine(string appid, string server, string path) {
-    this->appID  = appid;
+WAEngine::WAEngine(std::string appID, std::string server, std::string path) {
+    this->appID  = appID;
     this->server = server;
     this->path = path;
 }
 
+/**
+ * Destructor; it frees the Pods
+ */
 WAEngine::~WAEngine() {
 	for (auto it : this->Pods) delete it;
 }
@@ -28,31 +32,27 @@ WAEngine::~WAEngine() {
 /**
  * Returns a setted AppID
  *
- * @return AppID
+ * \return AppID
  */
-string
-WAEngine::getAppID()
-{
+std::string WAEngine::getAppID() {
     return this->appID;
 }
 
 /**
  * Set another AppID
  *
- * @param appid Another AppID
+ * @param appID Another AppID
  */
-void
-WAEngine::setAppID(string appid)
-{
-    this->appID = appid;
+void WAEngine::setAppID(std::string appID) {
+    this->appID = appID;
 }
 
 /**
  * Returns a URL for HTTP request, using a internal WAQuery object
  *
- * @return URL
+ * @return URL to get the query, using the app ID
  */
-string WAEngine::getURL() {
+std::string WAEngine::getURL() {
     return this->getURL(this->query);
 }
 
@@ -62,22 +62,23 @@ string WAEngine::getURL() {
  * @param query Query to search
  * @return URL
  */
-string WAEngine::getURL(WAQuery query) {
-    return string("http://") + server + path + string("?appid=") + appID + query.toString();
+std::string WAEngine::getURL(WAQuery query) {
+    return std::string("http://") + server + path + std::string("?appid=") + appID + query.toString();
 }
 
 /**
  * Parsing data from a external array of char
  *
- * @param   inputData  String containing the data
- * @return  false, if a error
+ * @param   inputData	String containing the data
+ * @retval	TRUE		All OK
+ * @retval	FALSE		Parse failed
  */
-bool WAEngine::Parse(string inputData) {
+bool WAEngine::Parse(std::string inputData) {
     xml_document<> root;
     root.parse<0>((char*)inputData.c_str());
     xml_node<>* query = root.first_node("queryresult");
 
-    if (string(query->first_attribute("error")->value()) == "true") return false;
+    if (std::string(query->first_attribute("error")->value()) == "true") return false;
 
 	//this->Pods.clear();
     xml_node<>* node = query->first_node("pod");
@@ -96,7 +97,7 @@ static size_t WriteCallback(void *contents, size_t size, size_t nmemb, void *use
     return realsize;
 }
 
-bool WAEngine::DownloadURL(string url, string *readBuffer) {
+bool WAEngine::DownloadURL(std::string url, std::string *readBuffer) {
 	CURL *curl = nullptr;
 	CURLcode res;
 
@@ -125,18 +126,19 @@ bool WAEngine::DownloadURL(string url, string *readBuffer) {
 }
 
 /**
- * Returns a array of Pod
+ * Returns the getted array of Pods
  *
  * @return array of Pods
  */
-vector<WAPod*> WAEngine::getPods() {
+std::vector<WAPod*> WAEngine::getPods() {
     return this->Pods;
 }
 
 /**
  * Returns a Pod
  *
- * @return Pointer to the Pod with the specified title; nullptr if any
+ * @param[in]	title	Title to search on the getted Pods
+ * @return 				Pointer to the Pod with the specified title; nullptr if any
  */
 WAPod *WAEngine::getPod(const char *title) {
 	vector<WAPod*>::iterator it;
