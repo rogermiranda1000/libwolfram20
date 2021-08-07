@@ -32,7 +32,7 @@ WAEngine::~WAEngine() {
 /**
  * Returns a setted AppID
  *
- * \return AppID
+ * @return AppID
  */
 std::string WAEngine::getAppID() {
     return this->appID;
@@ -41,7 +41,7 @@ std::string WAEngine::getAppID() {
 /**
  * Set another AppID
  *
- * @param appID Another AppID
+ * @param[in]	appID	Another AppID
  */
 void WAEngine::setAppID(std::string appID) {
     this->appID = appID;
@@ -59,8 +59,8 @@ std::string WAEngine::getURL() {
 /**
  * Returns a URL for HTTP request, using a external WAQuery object
  *
- * @param query Query to search
- * @return URL
+ * @param[in]	query	Query to search
+ * @return 				URL to perform the query specified on \p query
  */
 std::string WAEngine::getURL(WAQuery query) {
     return std::string("http://") + server + path + std::string("?appid=") + appID + query.toString();
@@ -91,6 +91,9 @@ bool WAEngine::Parse(std::string inputData) {
     return true;
 }
 
+/**
+ * Function called by CUrl on \ref DownloadURL
+ */
 static size_t WriteCallback(void *contents, size_t size, size_t nmemb, void *userp) { 
     size_t realsize = size * nmemb;
 	((std::string*)userp)->append((char*)contents, realsize);
@@ -134,19 +137,21 @@ bool WAEngine::DownloadURL(std::string url, std::string *readBuffer) {
 }
 
 /**
- * Returns the getted array of Pods
+ * Returns the getted array of Pods of the previous query
  *
- * @return array of Pods
+ * @pre Call \ref Parse
+ * @return Getted Pods
  */
 std::vector<WAPod*> WAEngine::getPods() {
     return this->Pods;
 }
 
 /**
- * Returns a Pod
+ * Returns a Pod matching the \p title
  *
  * @param[in]	title	Title to search on the getted Pods
- * @return 				Pointer to the Pod with the specified title; nullptr if any
+ * @return 				Pointer to the Pod with the specified title
+ * @retval		nullptr	No Pod found
  */
 WAPod *WAEngine::getPod(const char *title) {
 	vector<WAPod*>::iterator it;
