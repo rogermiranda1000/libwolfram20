@@ -8,17 +8,18 @@
 
 #include "WASubpod.h"
 
-WASubpod::WASubpod() {
-    this->img = nullptr;
+WASubpod::WASubpod(const WASubpod &old) {
+	this->_title = old._title;
+	this->_plain = old._plain;
+	this->_img = new WAImage(*old._img);
 }
 
 WASubpod::WASubpod(xml_node<>* subpod) {
-    this->img = nullptr;
-	this->Parse(subpod);
+	this->parse(subpod);
 }
 
 WASubpod::~WASubpod() {
-    delete this->img;
+    delete this->_img;
 }
 
 /**
@@ -26,10 +27,8 @@ WASubpod::~WASubpod() {
  *
  * @return Title
  */
-string
-WASubpod::getTitle()
-{
-    return string(title);
+std::string WASubpod::getTitle() {
+    return this->_title;
 }
 
 /**
@@ -37,18 +36,16 @@ WASubpod::getTitle()
  *
  * @return Plain-text
  */
-string
-WASubpod::getPlainText()
-{
-    return string(plain);
+std::string WASubpod::getPlainText() {
+    return this->_plain;
 }
 
 WAImage* WASubpod::getImage() {
-    return this->img;
+    return this->_img;
 }
 
 bool WASubpod::hasImage() {
-    return this->img != nullptr;
+    return (this->_img != nullptr);
 }
 
 /**
@@ -56,22 +53,15 @@ bool WASubpod::hasImage() {
  *
  * @param   subpod XML Node of subpod
  */
-void WASubpod::Parse(xml_node<>* subpod) {
-    xml_node<>* plainNode;
-    xml_node<>* imgNode;
-
+void WASubpod::parse(xml_node<>* subpod) {
     // Get 'title' attribute
-    title = subpod->first_attribute("title")->value();
+    this->_title = std::string( subpod->first_attribute("title")->value() );
 
     // Get included plaintext
-    plainNode = subpod->first_node("plaintext");
-    plain     = plainNode->value();
+    xml_node<>* plainNode = subpod->first_node("plaintext");
+    this->_plain = std::string( plainNode->value() );
 
     // Reading 'img' block
-    imgNode = subpod->first_node("img");
-    if (imgNode != NULL)
-    {
-		delete this->img; // if someone call Parse() 2 times
-        this->img = new WAImage(imgNode);
-    }
+    xml_node<>* imgNode = subpod->first_node("img");
+    if (imgNode != nullptr) this->_img = new WAImage(imgNode);
 }

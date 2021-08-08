@@ -1,6 +1,21 @@
 #include "WAResult.h"
 
 /**
+ * Copy constructor
+ * @param[in]	old		Object to copy
+ */
+WAResult::WAResult(const WAResult &old) {
+	this->_error = old._error;
+    this->_dataTypes = old._dataTypes;
+    this->_version = old._version;
+	this->_timings = old._timings;
+	this->_timedout = old._timedout;
+	this->_try_again = old._try_again;
+
+	for (auto it : old._pods) this->_pods.push_back(new WAPod(*it));
+}
+
+/**
  * It extracts the data from \b query and save it into the object's arguments
  */
 WAResult::WAResult(rapidxml::xml_node<>* query) {

@@ -13,13 +13,12 @@ int main(int argc, char const *argv[]) {
 		return EXIT_FAILURE;
 	}
 	
-	WAResult *search = searcher.getResult(contents);
-	WAPod *response = search->getPod("Decimal approximation");
+	WAResult search = searcher.getResult(contents);
+	WAPod *response = search.getPod("Decimal approximation");
 	if (response != nullptr) {
 		std::cout << "Solution: "   << response->getSubpods()[0]->getPlainText() << std::endl;
 	}
 	else std::cout << "Keep searching!" << std::endl;
-	delete search;
 	
 	
 	
@@ -41,11 +40,10 @@ int main(int argc, char const *argv[]) {
 	}
 	
 	search = searcher.getResult(contents);
-	response = search->getPod("Decimal approximation");
+	response = search.getPod("Decimal approximation");
 	if (response != nullptr) {
 		std::cout << "Solution: "   << response->getSubpods()[0]->getPlainText() << std::endl;
 	}
-	delete search;
 	
 	return 0;
 }

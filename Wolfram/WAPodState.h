@@ -20,18 +20,18 @@
  */
 class WAPodState {
 public:
-    WAPodState() = default;
+    WAPodState(const WAPodState &old);
     WAPodState(rapidxml::xml_node<>* states);
 
     std::string getName();
     std::string getInput();
-
-    void Parse(rapidxml::xml_node<>* states);
 	
 private:
     // Attributes of 'state'
-    char* name;					//!< Describes the pod state
-    char* input;				//!< It can be used to modify subsequent queries
+    std::string _name;			//!< Describes the pod state
+    std::string _input;			//!< It can be used to modify subsequent queries
+
+    void parse(rapidxml::xml_node<>* states);
 };
 
 #endif // WAPODSTATE_H

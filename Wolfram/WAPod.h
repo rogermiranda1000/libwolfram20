@@ -24,6 +24,7 @@
  */
 class WAPod {
 public:
+    WAPod(const WAPod &old);
     WAPod(rapidxml::xml_node<>* pod);
     ~WAPod();
 
@@ -37,10 +38,10 @@ public:
 
 private:
     std::string _title;					//!< The pod title, used to identify the pod and its contents
-	bool error;							//!< true or false depending on whether a serious processing error occurred with this specific pod
+	bool _error;						//!< true or false depending on whether a serious processing error occurred with this specific pod
     std::string _scanner;				//!< The name of the scanner that produced this pod. A general guide to the type of data it holds
     std::string _id;					//!< A unique identifier for a pod, used for selecting specific pods to include or exclude
-    int position;						//!< A number indicating the intended position of the pod in a visual display
+    int _position;						//!< A number indicating the intended position of the pod in a visual display
 
     std::vector<WASubpod*> SubPods;		//!< All the valid Pods returned by the query
     std::vector<WAPodState*> States;	//!< All the valid States returned by the query

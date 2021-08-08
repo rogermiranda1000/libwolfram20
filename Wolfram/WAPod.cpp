@@ -10,6 +10,21 @@
 #include "WAPod.h"
 
 /**
+ * Copy constructor
+ * @param[in]	old		Object to copy
+ */
+WAPod::WAPod(const WAPod &old) {
+	this->_title = old._title;
+	this->_error = old._error;
+    this->_scanner = old._scanner;
+    this->_id = old._id;
+    this->_position = old._position;
+
+	for (auto it : old.SubPods) this->SubPods.push_back(new WASubpod(*it));
+	for (auto it : old.States) this->States.push_back(new WAPodState(*it));
+}
+
+/**
  * It generates the object with the \b pod
  *
  * @param[in]	pod			XML Node of pod
@@ -50,7 +65,7 @@ std::string WAPod::getScanner() {
  * @return  position
  */
 int WAPod::getPosition() {
-    return position;
+    return this->_position;
 }
 
 /**
@@ -88,7 +103,7 @@ std::vector<WAPodState*> WAPod::getStates() {
  */
 void WAPod::parse(rapidxml::xml_node<>* pod) {
     if (std::string(pod->first_attribute("error")->value()) == "true") {
-		this->error = true;
+		this->_error = true;
 		return;
 	}
 	
@@ -96,7 +111,7 @@ void WAPod::parse(rapidxml::xml_node<>* pod) {
     this->_title = std::string( pod->first_attribute("title")->value() );
     this->_id = std::string( pod->first_attribute("id")->value() );
     this->_scanner = std::string( pod->first_attribute("scanner")->value() );
-    position = atoi(pod->first_attribute("title")->value());
+    this->_position = atoi(pod->first_attribute("title")->value());
 	
 	// Reading a Subpods node
 	xml_node<>* nodeSubpod = pod->first_node("subpod");
