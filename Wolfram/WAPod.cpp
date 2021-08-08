@@ -1,13 +1,26 @@
-/*
- *      WAPod.cpp
+/*********************************************************************
+ *		@file WAPod.cpp
+ *      Wolfram API element
  *
- *      Copyright 2011 Nikolenko Konstantin <knikolenko@yandex.ru>
- *		Copyright 2021 Roger Miranda <contacto@rogermiranda1000.com>
- *
- */
+ *      @author 	Nikolenko Konstantin <knikolenko@yandex.ru>
+ *		@author 	Roger Miranda <contacto@rogermiranda1000.com>
+ *		@date		2011-2021
+ ********************************************************************/
 
 #include "WAPod.h"
 
+/**
+ * It generates the object with the \b pod
+ *
+ * @param[in]	pod			XML Node of pod
+ */
+WAPod::WAPod(rapidxml::xml_node<>* pod) {
+	this->parse(pod);
+}
+
+/**
+ * It frees the Subpods and States
+ */
 WAPod::~WAPod() {
 	for (auto it : this->SubPods) delete it;
 	for (auto it : this->States) delete it;
@@ -18,9 +31,8 @@ WAPod::~WAPod() {
  *
  * @return  title
  */
-char *WAPod::getTitle()
-{
-    return title;
+std::string WAPod::getTitle() {
+    return this->_title;
 }
 
 /**
@@ -28,10 +40,8 @@ char *WAPod::getTitle()
  *
  * @return  scanner
  */
-string
-WAPod::getScanner()
-{
-    return string(scanner);
+std::string WAPod::getScanner() {
+    return this->_scanner;
 }
 
 /**
@@ -39,9 +49,7 @@ WAPod::getScanner()
  *
  * @return  position
  */
-int
-WAPod::getPosition()
-{
+int WAPod::getPosition() {
     return position;
 }
 
@@ -50,16 +58,24 @@ WAPod::getPosition()
  *
  * @return  ID
  */
-string
-WAPod::getID()
-{
-    return string(id);
+std::string WAPod::getID() {
+    return this->_id;
 }
 
+/**
+ * Returns all the getted subpods
+ *
+ * @return  Subpods
+ */
 std::vector<WASubpod*> WAPod::getSubpods() {
     return SubPods;
 }
 
+/**
+ * Returns all the getted states
+ *
+ * @return  States
+ */
 std::vector<WAPodState*> WAPod::getStates() {
     return this->States;
 }
@@ -67,37 +83,36 @@ std::vector<WAPodState*> WAPod::getStates() {
 /**
  * Parsing a input 'pod' xml node
  *
- * @param   pod XML Node of pod
- * @return  false, if error
+ * @pre	You must call this function only once (called my the constructor)
+ * @param[in]	pod			XML Node of pod
  */
-bool WAPod::Parse(xml_node<>* pod) {
-    if (string(pod->first_attribute("error")->value()) == "true") return false;
+void WAPod::parse(rapidxml::xml_node<>* pod) {
+    if (std::string(pod->first_attribute("error")->value()) == "true") {
+		this->error = true;
+		return;
+	}
 	
     // Read arguments Pods node
-    title   = pod->first_attribute("title")->value();
-    id      = pod->first_attribute("id")->value();
-    scanner = pod->first_attribute("scanner")->value();
+    this->_title = std::string( pod->first_attribute("title")->value() );
+    this->_id = std::string( pod->first_attribute("id")->value() );
+    this->_scanner = std::string( pod->first_attribute("scanner")->value() );
     position = atoi(pod->first_attribute("title")->value());
 	
 	// Reading a Subpods node
-	this->SubPods.clear();
 	xml_node<>* nodeSubpod = pod->first_node("subpod");
-	for(size_t i = 0; i < atoi(pod->first_attribute("numsubpods")->value()); i++) {
+	for(unsigned int i = 0; i < atoi(pod->first_attribute("numsubpods")->value()); i++) {
 		this->SubPods.push_back(new WASubpod(nodeSubpod));
 		nodeSubpod = nodeSubpod->next_sibling("subpod");
 	}
 
     // Reading a States node
-	this->States.clear();
     xml_node<>* nodeStates = pod->first_node("states");
     if (nodeStates != nullptr) {
-		size_t len = atoi(nodeStates->first_attribute("count")->value());
+		unsigned int len = atoi(nodeStates->first_attribute("count")->value());
 		nodeStates = nodeStates->first_node("state");
-		for(size_t i = 0; i < len; i++) {
+		for(unsigned int i = 0; i < len; i++) {
 			this->States.push_back(new WAPodState(nodeStates));
 			nodeStates = nodeStates->next_sibling("state");
 		}
     }
-	
-    return true;
 }
