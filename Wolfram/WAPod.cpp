@@ -1,6 +1,6 @@
 /*********************************************************************
  *		@file WAPod.cpp
- *      Wolfram API content
+ *      Wolfram API element
  *
  *      @author 	Nikolenko Konstantin <knikolenko@yandex.ru>
  *		@author 	Roger Miranda <contacto@rogermiranda1000.com>
@@ -31,8 +31,8 @@ WAPod::~WAPod() {
  *
  * @return  title
  */
-char *WAPod::getTitle() {
-    return title;
+std::string WAPod::getTitle() {
+    return this->_title;
 }
 
 /**
@@ -41,7 +41,7 @@ char *WAPod::getTitle() {
  * @return  scanner
  */
 std::string WAPod::getScanner() {
-    return std::string(scanner);
+    return this->_scanner;
 }
 
 /**
@@ -59,7 +59,7 @@ int WAPod::getPosition() {
  * @return  ID
  */
 std::string WAPod::getID() {
-    return string(id);
+    return this->_id;
 }
 
 /**
@@ -93,14 +93,14 @@ void WAPod::parse(rapidxml::xml_node<>* pod) {
 	}
 	
     // Read arguments Pods node
-    title = pod->first_attribute("title")->value();
-    id = pod->first_attribute("id")->value();
-    scanner = pod->first_attribute("scanner")->value();
+    this->_title = std::string( pod->first_attribute("title")->value() );
+    this->_id = std::string( pod->first_attribute("id")->value() );
+    this->_scanner = std::string( pod->first_attribute("scanner")->value() );
     position = atoi(pod->first_attribute("title")->value());
 	
 	// Reading a Subpods node
 	xml_node<>* nodeSubpod = pod->first_node("subpod");
-	for(size_t i = 0; i < atoi(pod->first_attribute("numsubpods")->value()); i++) {
+	for(unsigned int i = 0; i < atoi(pod->first_attribute("numsubpods")->value()); i++) {
 		this->SubPods.push_back(new WASubpod(nodeSubpod));
 		nodeSubpod = nodeSubpod->next_sibling("subpod");
 	}
@@ -108,9 +108,9 @@ void WAPod::parse(rapidxml::xml_node<>* pod) {
     // Reading a States node
     xml_node<>* nodeStates = pod->first_node("states");
     if (nodeStates != nullptr) {
-		size_t len = atoi(nodeStates->first_attribute("count")->value());
+		unsigned int len = atoi(nodeStates->first_attribute("count")->value());
 		nodeStates = nodeStates->first_node("state");
-		for(size_t i = 0; i < len; i++) {
+		for(unsigned int i = 0; i < len; i++) {
 			this->States.push_back(new WAPodState(nodeStates));
 			nodeStates = nodeStates->next_sibling("state");
 		}

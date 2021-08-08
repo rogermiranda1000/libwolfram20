@@ -23,19 +23,14 @@ WAEngine::WAEngine(std::string appID, std::string server, std::string path) {
 }
 
 /**
- * Returns a URL for HTTP request, using a external WAQuery object
+ * Returns a URL for HTTP request, using the internal WAQuery object
  *
- * @param[in]	query	Query to search
- * @return 				URL to perform the query specified on \p query
+ * @param[in]	input	Text to search
+ * @return 				URL to perform the query specified on \p input with the internal arguments of the internal variable \p _query
  */
-std::string WAEngine::getURL(WAQuery query) {
-    return std::string("http://") + server + path + std::string("?appid=") + appID + query.toString();
-}
-
 std::string WAEngine::getURL(std::string input) {
-	WAQuery query;
-	query.setInput(input);
-	return this->getURL(query);
+	this->_query.setInput(input);
+    return string("http://") + server + path + string("?appid=") + appID + this->_query.toString();
 }
 
 /**
@@ -44,12 +39,21 @@ std::string WAEngine::getURL(std::string input) {
  * @param   inputData	String containing the data
  * @return				The parsed object indicated by \b inputData
  */
-WAResult WAEngine::getResult(std::string inputData) {
+WAResult *WAEngine::getResult(std::string inputData) {
     rapidxml::xml_document<> root;
     root.parse<0>((char*)inputData.c_str());
     rapidxml::xml_node<>* query = root.first_node("queryresult");
 
-    return WAResult(query);
+    return new WAResult(query);
+}
+
+/**
+ * It sets the max search time.
+ * Wolfram API has a time limit on how much a request can last. Use \b timeout to modify it.
+ * @param[in]	timeout		Max time that the request can last
+ */
+void WAEngine::setTimeout(unsigned int timeout) {
+	this->_query.setTimeout(timeout);
 }
 
 /**
