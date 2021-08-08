@@ -10,6 +10,14 @@
 #include "WAPod.h"
 
 /**
+ * Default constructor.
+ * It sets the error flag to 1, just in case
+ */
+WAPod::WAPod() {
+	this->_error = true;
+}
+
+/**
  * Copy constructor
  * @param[in]	old		Object to copy
  */

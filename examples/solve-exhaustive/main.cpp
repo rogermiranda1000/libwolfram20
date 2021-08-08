@@ -14,12 +14,11 @@ int main(int argc, char const *argv[]) {
 	}
 	
 	WAResult search = searcher.getResult(contents);
-	WAPod *response = search.getPod("Decimal approximation");
-	if (response != nullptr) {
-		std::cout << "Solution: "   << response->getSubpods()[0]->getPlainText() << std::endl;
+	WAPod response;
+	if (search.getPod("Decimal approximation", &response)) {
+		std::cout << "Solution: "   << response.getSubpods()[0]->getPlainText() << std::endl;
 	}
 	else std::cout << "Keep searching!" << std::endl;
-	
 	
 	
 	
@@ -40,9 +39,8 @@ int main(int argc, char const *argv[]) {
 	}
 	
 	search = searcher.getResult(contents);
-	response = search.getPod("Decimal approximation");
-	if (response != nullptr) {
-		std::cout << "Solution: "   << response->getSubpods()[0]->getPlainText() << std::endl;
+	if (search.getPod("Decimal approximation", &response)) {
+		std::cout << "Solution: "   << response.getSubpods()[0]->getPlainText() << std::endl;
 	}
 	
 	return 0;

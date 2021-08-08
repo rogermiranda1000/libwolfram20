@@ -26,10 +26,9 @@ class WAResult {
 public:
     WAResult(const WAResult &old);
     WAResult(rapidxml::xml_node<>* query);
-    ~WAResult();
 
-    std::vector<WAPod*> getPods();
-	WAPod *getPod(const char *title);
+    std::vector<WAPod> getPods();
+	bool getPod(const char *title, WAPod *pod);
     bool isError();
 	unsigned int getTimedout();
 
@@ -42,7 +41,7 @@ private:
 	unsigned int _timedout;		//!< Number of pods that are missing because they timed out
 	std::string _try_again;		//!< If _timedout > 0 this will contain an URL to perform the next search
 
-    std::vector<WAPod*> _pods;	//!< All the results of the query
+    std::vector<WAPod> _pods;	//!< All the results of the query
 
     void parse(rapidxml::xml_node<>* query);
 	static unsigned int countTimedout(char *timedout);

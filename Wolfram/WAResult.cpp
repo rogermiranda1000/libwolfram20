@@ -12,7 +12,7 @@ WAResult::WAResult(const WAResult &old) {
 	this->_timedout = old._timedout;
 	this->_try_again = old._try_again;
 
-	for (auto it : old._pods) this->_pods.push_back(new WAPod(*it));
+	for (auto it : old._pods) this->_pods.push_back(WAPod(it));
 }
 
 /**
@@ -20,13 +20,6 @@ WAResult::WAResult(const WAResult &old) {
  */
 WAResult::WAResult(rapidxml::xml_node<>* query) {
 	this->parse(query);
-}
-
-/**
- * Destructor; it frees the Pods
- */
-WAResult::~WAResult() {
-	for (auto it : this->_pods) delete it;
 }
 
 void WAResult::parse(rapidxml::xml_node<>* query) {
@@ -50,7 +43,7 @@ void WAResult::parse(rapidxml::xml_node<>* query) {
 
     rapidxml::xml_node<>* node = query->first_node("pod");
     for(size_t i = 0; i < atoi(query->first_attribute("numpods")->value()); i++) {
-		this->_pods.push_back(new WAPod(node));
+		this->_pods.push_back(WAPod(node));
         node = node->next_sibling("pod");
     }
 	
@@ -86,7 +79,7 @@ unsigned int WAResult::getTimedout() {
  * @pre Call \ref parse
  * @return Getted Pods
  */
-std::vector<WAPod*> WAResult::getPods() {
+std::vector<WAPod> WAResult::getPods() {
     return this->_pods;
 }
 
@@ -94,13 +87,19 @@ std::vector<WAPod*> WAResult::getPods() {
  * Returns a Pod matching the \p title
  *
  * @param[in]	title	Title to search on the getted Pods
- * @return 				Pointer to the Pod with the specified title
- * @retval		nullptr	No Pod found
+ * @param[out]	title	Pod with the specified title
+ * @retval		TRUE	Pod found
+ * @retval		FALSE	Pod not found
  */
-WAPod *WAResult::getPod(const char *title) {
-	vector<WAPod*>::iterator it;
+bool WAResult::getPod(const char *title, WAPod *pod) {
+	vector<WAPod>::iterator it;
 	for (it = begin(this->_pods); it != end(this->_pods); it++) {
-		if (strcmp((*it)->getTitle().c_str(), title) == 0) return *it; // same title
+		if (strcmp(it->getTitle().c_str(), title) == 0) {
+			// same title
+			*pod = *it;
+			return true;
+		}
 	}
-    return nullptr;
+	
+    return false;
 }

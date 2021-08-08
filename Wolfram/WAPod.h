@@ -24,6 +24,7 @@
  */
 class WAPod {
 public:
+	WAPod();
     WAPod(const WAPod &old);
     WAPod(rapidxml::xml_node<>* pod);
     ~WAPod();
