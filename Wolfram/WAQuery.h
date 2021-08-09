@@ -20,8 +20,7 @@ using std::vector;
 class WAQuery
 {
 public:
-    WAQuery() = default;
-    virtual ~WAQuery();
+    WAQuery();
 
     string  toString();
 
@@ -31,6 +30,8 @@ public:
     void    addFormat(string format);
 	void 	addFormat(const char *format);
     void    clearFormats();
+	
+	void	setTimeout(unsigned int value);
 
     ////////////  Location-related properties  /////////////
 
@@ -112,6 +113,7 @@ private:
 	static string parseInput(string str);
 
     string  input;
+	unsigned int timeout;
 
     string  ip;
     string  location;
@@ -123,12 +125,12 @@ private:
     string  currency;
     string  countryCode;
 
-    vector<string>  formats;
-    vector<string>  PodTitle;
-    vector<int>     PodIndexes;
-    vector<string>  PodScanners;
-    vector<string>  IncludePodIDs;
-    vector<string>  ExcludePodIDs;
+    vector<string>  	formats;
+    vector<string>  	PodTitle;
+    vector<int>     	PodIndexes;
+    vector<string>  	PodScanners;
+    vector<string>  	IncludePodIDs;
+    vector<string>  	ExcludePodIDs;
 };
 
 /**

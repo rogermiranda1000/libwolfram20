@@ -1,10 +1,11 @@
-/*
- *      WAPodState.h
+/*********************************************************************
+ *		@file WAPodState.h
+ *      Wolfram Pod States
  *
- *      Copyright 2011 Nikolenko Konstantin <knikolenko@yandex.ru>
- *		Copyright 2021 Roger Miranda <contacto@rogermiranda1000.com>
- *
- */
+ *      @author 	Nikolenko Konstantin <knikolenko@yandex.ru>
+ *		@author 	Roger Miranda <contacto@rogermiranda1000.com>
+ *		@date		2011-2021
+ ********************************************************************/
 
 #ifndef WAPODSTATE_H
 #define WAPODSTATE_H
@@ -13,24 +14,23 @@
 
 #include <rapidxml/rapidxml_utils.hpp>
 
-using std::string;
-using namespace rapidxml;
-
-class WAPodState
-{
+/**
+ * Contains a particular pod state for a single pod or subpod.
+ * More information [on Wolfram documentation](https://products.wolframalpha.com/api/documentation/#result-state)
+ */
+class WAPodState {
 public:
-    WAPodState() = default;
-    WAPodState(xml_node<>* states);
+    WAPodState(rapidxml::xml_node<>* states);
 
-    string  getName();      // Return 'name' attribute
-    string  getInput();     // Return 'input' attribute
-
-    void Parse(xml_node<>* states);
-protected:
+    std::string getName();
+    std::string getInput();
+	
 private:
     // Attributes of 'state'
-    char*   name;
-    char*   input;
+    std::string _name;			//!< Describes the pod state
+    std::string _input;			//!< It can be used to modify subsequent queries
+
+    void parse(rapidxml::xml_node<>* states);
 };
 
 #endif // WAPODSTATE_H

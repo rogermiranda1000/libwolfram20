@@ -1,102 +1,86 @@
-/*
- *      WAEngine.cpp
+/*********************************************************************
+ *		@file WAEngine.cpp
+ *      Wolfram API access point
  *
- *      Copyright 2011 Nikolenko Konstantin <knikolenko@yandex.ru>
- *		Copyright 2021 Roger Miranda <contacto@rogermiranda1000.com>
- *
- */
+ *      @author 	Nikolenko Konstantin <knikolenko@yandex.ru>
+ *		@author 	Roger Miranda <contacto@rogermiranda1000.com>
+ *		@date		2011-2021
+ ********************************************************************/
 
 #include "WAEngine.h"
 
 /**
  * Constructor with another config
  *
- * @param appid     AppID, for using WolframAlpha
- * @param server    Address of WolframAlpha server
- * @param path      Path to script on server
+ * @param[in] 	appID 	AppID, for using WolframAlpha
+ * @param[in] 	server 	Address of WolframAlpha server
+ * @param[in] 	path 	Path to script on server
  */
-WAEngine::WAEngine(string appid, string server, string path) {
-    this->appID  = appid;
+WAEngine::WAEngine(std::string appID, std::string server, std::string path) {
+    this->appID  = appID;
     this->server = server;
     this->path = path;
 }
 
-WAEngine::~WAEngine() {
-	for (auto it : this->Pods) delete it;
-}
-
 /**
- * Returns a setted AppID
+ * Returns a URL for HTTP request, using the internal WAQuery object
  *
- * @return AppID
+ * @param[in]	input	Text to search
+ * @return 				URL to perform the query specified on \p input with the internal arguments of the internal variable \p _query
  */
-string
-WAEngine::getAppID()
-{
-    return this->appID;
-}
-
-/**
- * Set another AppID
- *
- * @param appid Another AppID
- */
-void
-WAEngine::setAppID(string appid)
-{
-    this->appID = appid;
-}
-
-/**
- * Returns a URL for HTTP request, using a internal WAQuery object
- *
- * @return URL
- */
-string WAEngine::getURL() {
-    return this->getURL(this->query);
-}
-
-/**
- * Returns a URL for HTTP request, using a external WAQuery object
- *
- * @param query Query to search
- * @return URL
- */
-string WAEngine::getURL(WAQuery query) {
-    return string("http://") + server + path + string("?appid=") + appID + query.toString();
+std::string WAEngine::getURL(std::string input) {
+	this->_query.setInput(input);
+    return string("http://") + server + path + string("?appid=") + appID + this->_query.toString();
 }
 
 /**
  * Parsing data from a external array of char
  *
- * @param   inputData  String containing the data
- * @return  false, if a error
+ * @param[in]   inputData	String containing the data
+ * @return					The parsed object indicated by \p inputData
  */
-bool WAEngine::Parse(string inputData) {
-    xml_document<> root;
+WAResult WAEngine::getResult(std::string inputData) {
+    rapidxml::xml_document<> root;
     root.parse<0>((char*)inputData.c_str());
-    xml_node<>* query = root.first_node("queryresult");
+    rapidxml::xml_node<>* query = root.first_node("queryresult");
 
-    if (string(query->first_attribute("error")->value()) == "true") return false;
-
-	//this->Pods.clear();
-    xml_node<>* node = query->first_node("pod");
-    for(size_t i = 0; i < atoi(query->first_attribute("numpods")->value()); i++) {
-		WAPod *tmp = new WAPod();
-		if (tmp->Parse(node)) this->Pods.push_back(tmp);
-        node = node->next_sibling("pod");
-    }
-
-    return true;
+    return WAResult(query);
 }
 
-static size_t WriteCallback(void *contents, size_t size, size_t nmemb, void *userp) { 
+/**
+ * It sets the max search time.
+ * Wolfram API has a time limit on how much a request can last. Use \p timeout to modify it.
+ * @param[in]	timeout		Max time that the request can last
+ */
+void WAEngine::setTimeout(unsigned int timeout) {
+	this->_query.setTimeout(timeout);
+}
+
+/**
+ * Function called by CUrl on @ref DownloadURL
+ * More information [on CUrl documentation](https://curl.se/libcurl/c/CURLOPT_WRITEFUNCTION.html)
+ *
+ * @param[in]	contents	It points to the delivered data
+ * @param[in]	size		Always 1
+ * @param[in]	nmemb		Size of the data
+ * @param[out]	userp		User data
+ * @return					Number of bytes actually taken care of
+ */
+static size_t WriteCallback(void *contents, size_t size, size_t nmemb, void *userp) {
     size_t realsize = size * nmemb;
 	((std::string*)userp)->append((char*)contents, realsize);
     return realsize;
 }
 
-bool WAEngine::DownloadURL(string url, string *readBuffer) {
+/**
+ * Given an \p url it downloads its HTML contents
+ *
+ * @param[in]	url			URL to download
+ * @param[out]	readBuffer	Downloaded website
+ * @retval		true		All OK
+ * @retval		false		Error while downloading
+ */
+bool WAEngine::DownloadURL(std::string url, std::string *readBuffer) {
 	CURL *curl = nullptr;
 	CURLcode res;
 
@@ -104,7 +88,7 @@ bool WAEngine::DownloadURL(string url, string *readBuffer) {
 
 	curl = curl_easy_init();
 	if(curl == nullptr) {
-		cerr << "CURL init error!" << endl;
+		std::cerr << "CURL init error!" << std::endl;
 		return false;
 	}
 	
@@ -117,31 +101,9 @@ bool WAEngine::DownloadURL(string url, string *readBuffer) {
 	curl_easy_cleanup(curl);
 	
 	if (res != CURLE_OK) {
-		cerr << "Response code " << res << endl;
+		std::cerr << "Response code " << res << std::endl;
 		return false;
 	}
 	
 	return true;
-}
-
-/**
- * Returns a array of Pod
- *
- * @return array of Pods
- */
-vector<WAPod*> WAEngine::getPods() {
-    return this->Pods;
-}
-
-/**
- * Returns a Pod
- *
- * @return Pointer to the Pod with the specified title; nullptr if any
- */
-WAPod *WAEngine::getPod(const char *title) {
-	vector<WAPod*>::iterator it;
-	for (it = begin(this->Pods); it != end(this->Pods); it++) {
-		if (strcmp((*it)->getTitle(), title) == 0) return *it; // same title
-	}
-    return nullptr;
 }

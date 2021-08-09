@@ -15,31 +15,31 @@
 
 #include "WAImage.h"
 
-using std::string;
 using namespace rapidxml;
 
+/**
+ * Wolfram API element. It contains information about the pod.
+ * More information [on Wolfram documentation](https://products.wolframalpha.com/api/documentation/#result-subpod)
+ */
 class WASubpod
 {
 public:
-    WASubpod();
+    WASubpod(const WASubpod &old);
 	WASubpod(xml_node<>* subpod);
     ~WASubpod();
 
-    string  getTitle();         // Return attr 'title' of subpods
-    string  getPlainText();     // Return included plaintext of subpods
+    std::string  getTitle();
+    std::string  getPlainText();
 
     WAImage *getImage();
 	bool 	hasImage();
 
-    void Parse(xml_node<>* subpod);
-
 private:
-    // Attributes of 'subpod'
-    char*   title;
-    char*   plain;
+    std::string _title;			//!< TODO
+    std::string _plain;			//!< TODO
+    WAImage* _img;				//!< Included img block
 
-    // Included img block
-    WAImage* img;
+    void parse(xml_node<>* subpod);
 };
 
 #endif // WASUBPOD_H

@@ -7,4 +7,6 @@ add_library(Wolfram STATIC
 	WAPodState.cpp
 	WAQuery.cpp
 	WASubpod.cpp
+	WAResult.cpp
+	WAError.cpp
 )

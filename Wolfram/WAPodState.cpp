@@ -1,25 +1,30 @@
-/*
- *      WAPodState.cpp
+/*********************************************************************
+ *		@file WAPodState.cpp
+ *      Wolfram Pod States
  *
- *      Copyright 2011 Nikolenko Konstantin <knikolenko@yandex.ru>
- *		Copyright 2021 Roger Miranda <contacto@rogermiranda1000.com>
- *
- */
+ *      @author 	Nikolenko Konstantin <knikolenko@yandex.ru>
+ *		@author 	Roger Miranda <contacto@rogermiranda1000.com>
+ *		@date		2011-2021
+ ********************************************************************/
 
 #include "WAPodState.h"
 
-WAPodState::WAPodState(xml_node<>* states) {
-    this->Parse(states);
+/**
+ * It generates the object with the \p states
+ *
+ * @param[in]	states		XML Node of states
+ */
+WAPodState::WAPodState(rapidxml::xml_node<>* states) {
+    this->parse(states);
 }
 
 /**
- * Returning a 'name' attribute of state
+ * Returning the name of the state
  *
  * @return Name of image
  */
-string
-WAPodState::getName() {
-    return string(name);
+std::string WAPodState::getName() {
+    return this->_name;
 }
 
 /**
@@ -27,19 +32,18 @@ WAPodState::getName() {
  *
  * @return Input of image
  */
-string
-WAPodState::getInput() {
-    return string(input);
+std::string WAPodState::getInput() {
+    return this->_input;
 }
 
 /**
  * Parsing a input 'state' xml node
  *
- * @param   states XML Node of state
+ * @pre					It must be called only once (by the constructor)
+ * @param[in]	states	XML Node of state
  */
-void WAPodState::Parse(xml_node<>* states)
-{
+void WAPodState::parse(rapidxml::xml_node<>* states) {
     // Reading attribute
-    name    = states->first_attribute("name")->value();
-    input   = states->first_attribute("input")->value();
+    this->_name = std::string( states->first_attribute("name")->value() );
+    this->_input = std::string( states->first_attribute("input")->value() );
 }

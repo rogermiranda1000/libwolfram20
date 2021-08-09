@@ -8,15 +8,8 @@
 
 #include "WAQuery.h"
 
-WAQuery::~WAQuery()
-{
-    // Clear vectors
-    this->formats.clear();
-    this->PodTitle.clear();
-    this->PodIndexes.clear();
-    this->PodScanners.clear();
-    this->IncludePodIDs.clear();
-    this->ExcludePodIDs.clear();
+WAQuery::WAQuery() {
+	this->timeout = 5; // 5s timeout to get the data
 }
 
 /**
@@ -29,6 +22,7 @@ string WAQuery::toString() {
 
     // Adding a vectors data to string
     q += VectorToStr("&format=",       false, this->formats);
+	q += std::string("&scantimeout=") + std::to_string(this->timeout);
     q += VectorToStr("&includepodid=", true,  this->IncludePodIDs);
     q += VectorToStr("&excludepodid=", true,  this->ExcludePodIDs);
     q += VectorToStr("&podtitle=",     true,  this->PodTitle);
@@ -98,6 +92,11 @@ void WAQuery::addFormat(string format) {
  */
 void WAQuery::addFormat(const char *format) {
 	this->addFormat(string(format));
+}
+
+void WAQuery::setTimeout(unsigned int value) {
+	this->timeout = value;
+	
 }
 
 /**
