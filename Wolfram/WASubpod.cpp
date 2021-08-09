@@ -53,7 +53,7 @@ bool WASubpod::hasImage() {
 }
 
 /**
- * Parsing a input 'subpod' xml node
+ * Parsing the input \p subpod
  *
  * @pre 				It must be called only once
  * @param[in]   subpod	XML Node of subpod

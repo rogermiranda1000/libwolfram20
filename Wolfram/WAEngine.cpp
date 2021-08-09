@@ -37,7 +37,7 @@ std::string WAEngine::getURL(std::string input) {
  * Parsing data from a external array of char
  *
  * @param[in]   inputData	String containing the data
- * @return					The parsed object indicated by \b inputData
+ * @return					The parsed object indicated by \p inputData
  */
 WAResult WAEngine::getResult(std::string inputData) {
     rapidxml::xml_document<> root;
@@ -49,7 +49,7 @@ WAResult WAEngine::getResult(std::string inputData) {
 
 /**
  * It sets the max search time.
- * Wolfram API has a time limit on how much a request can last. Use \b timeout to modify it.
+ * Wolfram API has a time limit on how much a request can last. Use \p timeout to modify it.
  * @param[in]	timeout		Max time that the request can last
  */
 void WAEngine::setTimeout(unsigned int timeout) {

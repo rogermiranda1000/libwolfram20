@@ -18,7 +18,7 @@ WAPod::WAPod() {
 }
 
 /**
- * It generates the object with the \b pod
+ * It generates the object with the \p pod
  *
  * @param[in]	pod			XML Node of pod
  */

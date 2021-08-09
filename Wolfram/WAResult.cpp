@@ -1,6 +1,20 @@
 #include "WAResult.h"
 
 /**
+ * Copy constructor
+ */
+WAResult::WAResult(const WAResult &old) {
+	this->_is_error = old._is_error;
+	if (old._error != nullptr) this->_error = new WAError(*old._error);
+	this->_dataTypes = old._dataTypes;
+	this->_version = old._version;
+	this->_timings = old._timings;
+	this->_timedout = old._timedout;
+	this->_try_again = old._try_again;
+	this->_pods = old._pods;
+}
+
+/**
  * It extracts the data from \b query and save it into the object's arguments
  */
 WAResult::WAResult(rapidxml::xml_node<>* query) {
@@ -9,13 +23,14 @@ WAResult::WAResult(rapidxml::xml_node<>* query) {
 
 void WAResult::parse(rapidxml::xml_node<>* query) {
 	if (std::string(query->first_attribute("success")->value()) == "false") {
-		this->_error = true;
+		this->_is_error = true;
 		return;
 	}
 	
     if (std::string(query->first_attribute("error")->value()) == "true") {
-		// TODO get error
-		this->_error = true;
+		this->_is_error = true;
+		rapidxml::xml_node<>* error = query->first_node("error");
+		if (error != nullptr) this->_error = new WAError(error);
 		return;
 	}
 	
@@ -51,6 +66,16 @@ unsigned int WAResult::countTimedout(char *timedout) {
 }
 
 bool WAResult::isError() {
+	return this->_is_error;
+}
+
+/**
+ * It counts the pods that are timedout
+ * @warning		Even if @ref isError returns true you souldn't expect the return to be a valid pointer (not nullptr)
+ * @return		Information about the error
+ * @retval		nullptr		Error not returned by the API
+ */
+WAError *WAResult::getError() {
 	return this->_error;
 }
 
@@ -61,8 +86,8 @@ unsigned int WAResult::getTimedout() {
 /**
  * Returns the getted array of Pods of the previous query
  *
- * @pre Call \ref parse
- * @return Getted Pods
+ * @pre 	Call \ref parse
+ * @return 	Getted Pods
  */
 std::vector<WAPod> WAResult::getPods() {
     return this->_pods;
