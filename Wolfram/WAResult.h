@@ -8,6 +8,7 @@
 
 #include "WAQuery.h"
 #include "WAPod.h"
+#include "WAError.h"
 
 
 /**
@@ -24,15 +25,20 @@ typedef struct {
  */
 class WAResult {
 public:
+    WAResult(const WAResult &old);
     WAResult(rapidxml::xml_node<>* query);
 
     std::vector<WAPod> getPods();
 	bool getPod(const char *title, WAPod *pod);
-    bool isError();
 	unsigned int getTimedout();
+	
+    bool isError();
+	WAError *getError();
 
 private:
-	bool _error;				//!< The input could be successfully understood or a serious processing error occurred
+	bool _is_error;				//!< The input could be successfully understood or a serious processing error occurred
+	WAError *_error;			//!< Information about the given error
+	
     std::string _dataTypes;  	//!< Categories and types of data represented in the results
     std::string _version;    	//!< The version specification of the API on the server that produced this result
 	Timings _timings;			//!< Time in seconds required to parse the input and generate the output

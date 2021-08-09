@@ -37,7 +37,7 @@ std::string WAEngine::getURL(std::string input) {
  * Parsing data from a external array of char
  *
  * @param[in]   inputData	String containing the data
- * @return					The parsed object indicated by \b inputData
+ * @return					The parsed object indicated by \p inputData
  */
 WAResult WAEngine::getResult(std::string inputData) {
     rapidxml::xml_document<> root;
@@ -49,7 +49,7 @@ WAResult WAEngine::getResult(std::string inputData) {
 
 /**
  * It sets the max search time.
- * Wolfram API has a time limit on how much a request can last. Use \b timeout to modify it.
+ * Wolfram API has a time limit on how much a request can last. Use \p timeout to modify it.
  * @param[in]	timeout		Max time that the request can last
  */
 void WAEngine::setTimeout(unsigned int timeout) {
@@ -57,7 +57,14 @@ void WAEngine::setTimeout(unsigned int timeout) {
 }
 
 /**
- * Function called by CUrl on \ref DownloadURL
+ * Function called by CUrl on @ref DownloadURL
+ * More information [on CUrl documentation](https://curl.se/libcurl/c/CURLOPT_WRITEFUNCTION.html)
+ *
+ * @param[in]	contents	It points to the delivered data
+ * @param[in]	size		Always 1
+ * @param[in]	nmemb		Size of the data
+ * @param[out]	userp		User data
+ * @return					Number of bytes actually taken care of
  */
 static size_t WriteCallback(void *contents, size_t size, size_t nmemb, void *userp) {
     size_t realsize = size * nmemb;
@@ -70,8 +77,8 @@ static size_t WriteCallback(void *contents, size_t size, size_t nmemb, void *use
  *
  * @param[in]	url			URL to download
  * @param[out]	readBuffer	Downloaded website
- * @retval		TRUE		All OK
- * @retval		FALSE		Error while downloading
+ * @retval		true		All OK
+ * @retval		false		Error while downloading
  */
 bool WAEngine::DownloadURL(std::string url, std::string *readBuffer) {
 	CURL *curl = nullptr;

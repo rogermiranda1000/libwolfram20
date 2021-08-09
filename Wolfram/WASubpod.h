@@ -17,6 +17,10 @@
 
 using namespace rapidxml;
 
+/**
+ * Wolfram API element. It contains information about the pod.
+ * More information [on Wolfram documentation](https://products.wolframalpha.com/api/documentation/#result-subpod)
+ */
 class WASubpod
 {
 public:
