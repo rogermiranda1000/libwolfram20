@@ -32,7 +32,7 @@ WAPod::WAPod(rapidxml::xml_node<>* pod) {
  * @param[in]	old			Object to copy
  */
 WAPod::WAPod(const WAPod &old) {
-	this->_error = new WAError(*old._error);
+	if (old._error != nullptr) this->_error = new WAError(*old._error);
 	this->_title = old._title;
 	this->_scanner = old._scanner;
 	this->_id = old._id;

@@ -123,7 +123,7 @@ std::vector<WAPod> WAResult::getPods() {
  * @retval		FALSE	Pod not found
  */
 bool WAResult::getPod(const char *title, WAPod *pod) {
-	vector<WAPod>::iterator it;
+	std::vector<WAPod>::iterator it;
 	for (it = begin(this->_pods); it != end(this->_pods); it++) {
 		std::string cur_title = it->getTitle();
 		if (strcmp(cur_title.c_str(), title) == 0) {
