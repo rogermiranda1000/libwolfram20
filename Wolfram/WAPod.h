@@ -28,6 +28,7 @@ public:
 	WAPod();
     WAPod(rapidxml::xml_node<>* pod);
 	WAPod(const WAPod &old);
+	~WAPod();
 
     std::string getTitle();
     std::string getScanner();

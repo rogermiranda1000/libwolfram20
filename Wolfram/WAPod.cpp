@@ -14,6 +14,7 @@
  * It sets the error object, just in case
  */
 WAPod::WAPod() {
+	this->_error = nullptr;
 	this->_error = new WAError(0, "Uninitialized WAPod object");
 }
 
@@ -27,11 +28,19 @@ WAPod::WAPod(rapidxml::xml_node<>* pod) {
 }
 
 /**
+ * Destructor. It frees the error memory (if any).
+ */
+WAPod::~WAPod() {
+	delete this->_error;
+}
+
+/**
  * Copy constructor
  *
  * @param[in]	old			Object to copy
  */
 WAPod::WAPod(const WAPod &old) {
+	this->_error = nullptr;
 	if (old._error != nullptr) this->_error = new WAError(*old._error);
 	this->_title = old._title;
 	this->_scanner = old._scanner;
@@ -120,7 +129,8 @@ WAError *WAPod::getError() {
  * @param[in]	pod			XML Node of pod
  */
 void WAPod::parse(rapidxml::xml_node<>* pod) {
-    if (std::string(pod->first_attribute("error")->value()) == "true") {
+	this->_error = nullptr;
+    if (strcmp(pod->first_attribute("error")->value(), "true") == 0) {
 		this->_error = new WAError(pod->first_node("error"));
 		return;
 	}

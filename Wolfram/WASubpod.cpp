@@ -16,6 +16,7 @@
 WASubpod::WASubpod(const WASubpod &old) {
 	this->_title = old._title;
 	this->_plain = old._plain;
+	this->_img = nullptr;
 	if (old._img != nullptr) this->_img = new WAImage(*old._img);
 }
 
@@ -89,5 +90,6 @@ void WASubpod::parse(xml_node<>* subpod) {
 
     // Reading 'img' block
     xml_node<>* imgNode = subpod->first_node("img");
+	this->_img = nullptr;
     if (imgNode != nullptr) this->_img = new WAImage(imgNode);
 }
