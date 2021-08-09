@@ -58,8 +58,8 @@ void WAResult::parse(rapidxml::xml_node<>* query) {
 	this->_dataTypes = std::string( query->first_attribute("datatypes")->value() );
 	this->_timings = (Timings){ .parse = (float)atof(query->first_attribute("timing")->value()),
 							.generate = (float)atof(query->first_attribute("parsetiming")->value()) };
-	this->_timedout = WAResult::countTimedout(query->first_attribute("timedout")->value());
-	if (this->_timedout > 0) this->_try_again = std::string( query->first_attribute("recalculate")->value() );
+	this->_timedout = WAResult::splitTimedout(query->first_attribute("timedout")->value());
+	if (this->getTimedoutNumber() > 0) this->_try_again = std::string( query->first_attribute("recalculate")->value() );
 
     rapidxml::xml_node<>* node = query->first_node("pod");
     for(size_t i = 0; i < atoi(query->first_attribute("numpods")->value()); i++) {
@@ -71,18 +71,18 @@ void WAResult::parse(rapidxml::xml_node<>* query) {
 }
 
 /**
- * It counts the pods that are timedout
- * @param[in]	timedout	Pod names separated by ',' that are timedout. Empty string (not null) if any.
- * @return					Number of timedout elements
+ * It stores the pods that are timedout into a vector.
+ * Posted on https://stackoverflow.com/a/52690600/9178470
+ * @author					eXpl0it3R
+ * @param[in]	s			Pod names separated by ',' that are timedout. Empty string (not null) if any.
+ * @return					Timedout pods vector
  */
-unsigned int WAResult::countTimedout(char *timedout) {
-	if (*timedout = '\0') return 0;
-	unsigned int counter = 1; // if there's zero comas (but it's not empty; as checked on the previous line) there's 1 element
-	while (*timedout != '\0') {
-		if (*timedout == ',') counter++;
-		timedout++;
-	}
-	return counter;
+std::vector<std::string> WAResult::splitTimedout(const std::string& s) {
+	std::vector<std::string> splits;
+	std::string split;
+	std::istringstream ss(s);
+	while (std::getline(ss, split, ',')) splits.push_back(split);
+	return splits;
 }
 
 /**
@@ -109,7 +109,15 @@ WAError *WAResult::getError() {
  * It returns the number of elements that were timedout
  * @return		Timedout elements
  */
-unsigned int WAResult::getTimedout() {
+unsigned int WAResult::getTimedoutNumber() {
+	return this->_timedout.size();
+}
+
+/**
+ * It returns the elements that were timedout
+ * @return		Timedout elements
+ */
+std::vector<std::string> WAResult::getTimedout() {
 	return this->_timedout;
 }
 
