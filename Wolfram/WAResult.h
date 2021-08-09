@@ -24,7 +24,6 @@ typedef struct {
  */
 class WAResult {
 public:
-    WAResult(const WAResult &old);
     WAResult(rapidxml::xml_node<>* query);
 
     std::vector<WAPod> getPods();

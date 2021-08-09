@@ -8,10 +8,14 @@
 
 #include "WASubpod.h"
 
+/**
+ * Copy constructor
+ * @param[in]	old		Object to copy
+ */
 WASubpod::WASubpod(const WASubpod &old) {
 	this->_title = old._title;
 	this->_plain = old._plain;
-	this->_img = new WAImage(*old._img);
+	if (old._img != nullptr) this->_img = new WAImage(*old._img);
 }
 
 WASubpod::WASubpod(xml_node<>* subpod) {
@@ -51,7 +55,8 @@ bool WASubpod::hasImage() {
 /**
  * Parsing a input 'subpod' xml node
  *
- * @param   subpod XML Node of subpod
+ * @pre 				It must be called only once
+ * @param[in]   subpod	XML Node of subpod
  */
 void WASubpod::parse(xml_node<>* subpod) {
     // Get 'title' attribute

@@ -1,21 +1,6 @@
 #include "WAResult.h"
 
 /**
- * Copy constructor
- * @param[in]	old		Object to copy
- */
-WAResult::WAResult(const WAResult &old) {
-	this->_error = old._error;
-    this->_dataTypes = old._dataTypes;
-    this->_version = old._version;
-	this->_timings = old._timings;
-	this->_timedout = old._timedout;
-	this->_try_again = old._try_again;
-
-	for (auto it : old._pods) this->_pods.push_back(WAPod(it));
-}
-
-/**
  * It extracts the data from \b query and save it into the object's arguments
  */
 WAResult::WAResult(rapidxml::xml_node<>* query) {
@@ -86,15 +71,17 @@ std::vector<WAPod> WAResult::getPods() {
 /**
  * Returns a Pod matching the \p title
  *
+ * @warning				If \p _pods contains pods with the same title it will return the first one
  * @param[in]	title	Title to search on the getted Pods
- * @param[out]	title	Pod with the specified title
+ * @param[out]	pod		Pod with the specified title
  * @retval		TRUE	Pod found
  * @retval		FALSE	Pod not found
  */
 bool WAResult::getPod(const char *title, WAPod *pod) {
 	vector<WAPod>::iterator it;
 	for (it = begin(this->_pods); it != end(this->_pods); it++) {
-		if (strcmp(it->getTitle().c_str(), title) == 0) {
+		std::string cur_title = it->getTitle();
+		if (strcmp(cur_title.c_str(), title) == 0) {
 			// same title
 			*pod = *it;
 			return true;

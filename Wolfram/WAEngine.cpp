@@ -59,7 +59,7 @@ void WAEngine::setTimeout(unsigned int timeout) {
 /**
  * Function called by CUrl on \ref DownloadURL
  */
-static size_t WriteCallback(void *contents, size_t size, size_t nmemb, void *userp) { 
+static size_t WriteCallback(void *contents, size_t size, size_t nmemb, void *userp) {
     size_t realsize = size * nmemb;
 	((std::string*)userp)->append((char*)contents, realsize);
     return realsize;

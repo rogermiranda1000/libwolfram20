@@ -8,14 +8,6 @@
 
 #include "WAImage.h"
 
-WAImage::WAImage(const WAImage &old) {
-	this->_src = old._src;
-	this->_alt = old._alt;
-	this->_title = old._title;
-	this->_width = old._width;
-	this->_height = old._height;
-}
-
 WAImage::WAImage(xml_node<>* imgNode) {
 	this->parse(imgNode);
 }

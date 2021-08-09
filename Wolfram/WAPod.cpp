@@ -18,35 +18,12 @@ WAPod::WAPod() {
 }
 
 /**
- * Copy constructor
- * @param[in]	old		Object to copy
- */
-WAPod::WAPod(const WAPod &old) {
-	this->_title = old._title;
-	this->_error = old._error;
-    this->_scanner = old._scanner;
-    this->_id = old._id;
-    this->_position = old._position;
-
-	for (auto it : old.SubPods) this->SubPods.push_back(new WASubpod(*it));
-	for (auto it : old.States) this->States.push_back(new WAPodState(*it));
-}
-
-/**
  * It generates the object with the \b pod
  *
  * @param[in]	pod			XML Node of pod
  */
 WAPod::WAPod(rapidxml::xml_node<>* pod) {
 	this->parse(pod);
-}
-
-/**
- * It frees the Subpods and States
- */
-WAPod::~WAPod() {
-	for (auto it : this->SubPods) delete it;
-	for (auto it : this->States) delete it;
 }
 
 /**
@@ -90,7 +67,7 @@ std::string WAPod::getID() {
  *
  * @return  Subpods
  */
-std::vector<WASubpod*> WAPod::getSubpods() {
+std::vector<WASubpod> WAPod::getSubpods() {
     return SubPods;
 }
 
@@ -99,7 +76,7 @@ std::vector<WASubpod*> WAPod::getSubpods() {
  *
  * @return  States
  */
-std::vector<WAPodState*> WAPod::getStates() {
+std::vector<WAPodState> WAPod::getStates() {
     return this->States;
 }
 
@@ -124,7 +101,7 @@ void WAPod::parse(rapidxml::xml_node<>* pod) {
 	// Reading a Subpods node
 	xml_node<>* nodeSubpod = pod->first_node("subpod");
 	for(unsigned int i = 0; i < atoi(pod->first_attribute("numsubpods")->value()); i++) {
-		this->SubPods.push_back(new WASubpod(nodeSubpod));
+		this->SubPods.push_back(WASubpod(nodeSubpod));
 		nodeSubpod = nodeSubpod->next_sibling("subpod");
 	}
 
@@ -134,7 +111,7 @@ void WAPod::parse(rapidxml::xml_node<>* pod) {
 		unsigned int len = atoi(nodeStates->first_attribute("count")->value());
 		nodeStates = nodeStates->first_node("state");
 		for(unsigned int i = 0; i < len; i++) {
-			this->States.push_back(new WAPodState(nodeStates));
+			this->States.push_back(WAPodState(nodeStates));
 			nodeStates = nodeStates->next_sibling("state");
 		}
     }

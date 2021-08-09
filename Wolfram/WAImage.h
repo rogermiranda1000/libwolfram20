@@ -18,7 +18,6 @@ using namespace rapidxml;
 class WAImage
 {
 public:
-    WAImage(const WAImage &old);
     WAImage(xml_node<>* imgNode);
 
     std::string getSrc();

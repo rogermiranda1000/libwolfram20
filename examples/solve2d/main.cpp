@@ -13,13 +13,12 @@ int main(int argc, char const *argv[]) {
 		return EXIT_FAILURE;
 	}
 	
-	WAResult *search = searcher.getResult(contents);
-	WAPod *response = search->getPod("Implicit plot");
-	if (response != nullptr) {
-		WASubpod *subpod = response->getSubpods()[0];
-		if (subpod->hasImage()) std::cout << "Graph: " << subpod->getImage()->getSrc() << std::endl;
+	WAResult search = searcher.getResult(contents);
+	WAPod response;
+	if (search.getPod("Implicit plot", &response)) {
+		WASubpod subpod = response.getSubpods()[0];
+		if (subpod.hasImage()) std::cout << "Graph: " << subpod.getImage()->getSrc() << std::endl;
 	}
-	delete search;
 	
 	return 0;
 }

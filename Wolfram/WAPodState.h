@@ -20,7 +20,6 @@
  */
 class WAPodState {
 public:
-    WAPodState(const WAPodState &old);
     WAPodState(rapidxml::xml_node<>* states);
 
     std::string getName();

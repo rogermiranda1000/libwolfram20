@@ -9,11 +9,6 @@
 
 #include "WAPodState.h"
 
-WAPodState::WAPodState(const WAPodState &old) {
-	this->_name = old._name;
-	this->_input = old._input;
-}
-
 WAPodState::WAPodState(rapidxml::xml_node<>* states) {
     this->parse(states);
 }
