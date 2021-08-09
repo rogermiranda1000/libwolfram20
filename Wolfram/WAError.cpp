@@ -9,6 +9,17 @@
 #include "WAError.h"
 
 /**
+ * C++ error
+ *
+ * @param[in]	code		Error code
+ * @param[in]	msg			Error message
+ */
+WAError::WAError(int code, const char *msg) {
+	this->_msg = std::string(msg);
+	this->_code = code;
+}
+
+/**
  * It generates the object with the \b error
  *
  * @param[in]	error		XML Node of error
@@ -17,10 +28,20 @@ WAError::WAError(rapidxml::xml_node<>* error) {
 	this->parse(error);
 }
 
+/**
+ * It returns information about the error
+ *
+ * @return	Error message
+ */
 std::string WAError::getErrorMessage() {
 	return this->_msg;
 }
 
+/**
+ * It returns the error code
+ *
+ * @return	Error code
+ */
 int WAError::getErrorCode() {
 	return this->_code;
 }

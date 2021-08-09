@@ -8,6 +8,11 @@
 
 #include "WAImage.h"
 
+/**
+ * It extracts the data from \b imgNode and save it into the object's arguments
+ *
+ * @param[in]	imgNode		XML Node of imgNode
+ */
 WAImage::WAImage(xml_node<>* imgNode) {
 	this->parse(imgNode);
 }

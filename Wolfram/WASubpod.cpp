@@ -10,6 +10,7 @@
 
 /**
  * Copy constructor
+ *
  * @param[in]	old		Object to copy
  */
 WASubpod::WASubpod(const WASubpod &old) {
@@ -18,10 +19,18 @@ WASubpod::WASubpod(const WASubpod &old) {
 	if (old._img != nullptr) this->_img = new WAImage(*old._img);
 }
 
+/**
+ * It generates the object with the \p subpod
+ *
+ * @param[in]	subpod		XML Node of subpod
+ */
 WASubpod::WASubpod(xml_node<>* subpod) {
 	this->parse(subpod);
 }
 
+/**
+ * Destructor. It frees the image.
+ */
 WASubpod::~WASubpod() {
     delete this->_img;
 }
@@ -44,10 +53,22 @@ std::string WASubpod::getPlainText() {
     return this->_plain;
 }
 
+/**
+ * Returns the subpod's image
+ *
+ * @return					The subpod's image
+ * @retval		nullptr		The subpod doesn't have any image
+ */
 WAImage* WASubpod::getImage() {
     return this->_img;
 }
 
+/**
+ * Returns if the subpod contains an image
+ *
+ * @retval		true	The subpod have an image
+ * @retval		false	The subpod doesn't have any image
+ */
 bool WASubpod::hasImage() {
     return (this->_img != nullptr);
 }

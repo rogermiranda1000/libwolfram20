@@ -11,10 +11,10 @@
 
 /**
  * Default constructor.
- * It sets the error flag to 1, just in case
+ * It sets the error object, just in case
  */
 WAPod::WAPod() {
-	this->_error = true;
+	this->_error = new WAError(0, "Uninitialized WAPod object");
 }
 
 /**
@@ -24,6 +24,21 @@ WAPod::WAPod() {
  */
 WAPod::WAPod(rapidxml::xml_node<>* pod) {
 	this->parse(pod);
+}
+
+/**
+ * Copy constructor
+ *
+ * @param[in]	old			Object to copy
+ */
+WAPod::WAPod(const WAPod &old) {
+	this->_error = new WAError(*old._error);
+	this->_title = old._title;
+	this->_scanner = old._scanner;
+	this->_id = old._id;
+	this->_position = old._position;
+	this->SubPods = old.SubPods;
+	this->States = old.States;
 }
 
 /**
@@ -81,6 +96,24 @@ std::vector<WAPodState> WAPod::getStates() {
 }
 
 /**
+ * It checks if the results contains valid data.
+ * @retval		true	The result is an error
+ * @retval		false	All OK
+ */
+bool WAPod::isError() {
+	return (this->_error != nullptr);
+}
+
+/**
+ * It provides information about what happened
+ * @return		Information about the error
+ * @retval		nullptr		Error not returned by the API
+ */
+WAError *WAPod::getError() {
+	return this->_error;
+}
+
+/**
  * Parsing a input 'pod' xml node
  *
  * @pre	You must call this function only once (called my the constructor)
@@ -88,7 +121,7 @@ std::vector<WAPodState> WAPod::getStates() {
  */
 void WAPod::parse(rapidxml::xml_node<>* pod) {
     if (std::string(pod->first_attribute("error")->value()) == "true") {
-		this->_error = true;
+		this->_error = new WAError(pod->first_node("error"));
 		return;
 	}
 	

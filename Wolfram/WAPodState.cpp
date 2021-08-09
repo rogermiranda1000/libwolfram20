@@ -9,6 +9,11 @@
 
 #include "WAPodState.h"
 
+/**
+ * It generates the object with the \p states
+ *
+ * @param[in]	states		XML Node of states
+ */
 WAPodState::WAPodState(rapidxml::xml_node<>* states) {
     this->parse(states);
 }
@@ -34,6 +39,7 @@ std::string WAPodState::getInput() {
 /**
  * Parsing a input 'state' xml node
  *
+ * @pre					It must be called only once (by the constructor)
  * @param[in]	states	XML Node of state
  */
 void WAPodState::parse(rapidxml::xml_node<>* states) {

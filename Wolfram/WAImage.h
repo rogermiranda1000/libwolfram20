@@ -19,6 +19,7 @@ class WAImage
 {
 public:
     WAImage(xml_node<>* imgNode);
+	WAImage(const WAImage &old) = default;	//!< Copy constructor
 
     std::string getSrc();
     std::string getAlt();

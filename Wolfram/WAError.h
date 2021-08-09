@@ -19,7 +19,9 @@
  */
 class WAError {
 public:
+	WAError(int code, const char *msg);
     WAError(rapidxml::xml_node<>* error);
+	WAError(const WAError &old) = default;	//!< Copy constructor
 
     std::string getErrorMessage();
     int getErrorCode();
