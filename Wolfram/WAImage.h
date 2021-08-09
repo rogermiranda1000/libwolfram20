@@ -13,30 +13,28 @@
 
 #include <rapidxml/rapidxml_utils.hpp>
 
-using std::string;
 using namespace rapidxml;
 
 class WAImage
 {
 public:
-    WAImage();
     WAImage(xml_node<>* imgNode);
 
-    string  getSrc();
-    string  getAlt();
-    string  getTitle();
-    size_t  getWidth();
-    size_t  getHeight();
-
-    void    Parse(xml_node<>* imgNode);
+    std::string getSrc();
+    std::string getAlt();
+    std::string getTitle();
+    size_t getWidth();
+    size_t getHeight();
 
 private:
     // Attributes of 'image' node
-    char*   src;
-    char*   alt;
-    char*   title;
-    size_t  width;
-    size_t  height;
+    std::string _src;
+    std::string _alt;
+    std::string _title;
+    size_t _width;
+    size_t _height;
+
+    void parse(xml_node<>* imgNode);
 };
 
 #endif // WAIMAGE_H

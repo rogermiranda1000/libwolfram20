@@ -8,17 +8,8 @@
 
 #include "WAImage.h"
 
-WAImage::WAImage() {
-	this->src = nullptr;
-	this->alt = nullptr;
-	this->title = nullptr;
-}
-
 WAImage::WAImage(xml_node<>* imgNode) {
-	this->src = nullptr;
-	this->alt = nullptr;
-	this->title = nullptr;
-	this->Parse(imgNode);
+	this->parse(imgNode);
 }
 
 /**
@@ -26,9 +17,8 @@ WAImage::WAImage(xml_node<>* imgNode) {
  *
  * @return Address of image
  */
-string WAImage::getSrc() {
-	if (this->src == nullptr) return string("");
-    return string(this->src);
+std::string WAImage::getSrc() {
+    return this->_src;
 }
 
 /**
@@ -36,9 +26,8 @@ string WAImage::getSrc() {
  *
  * @return Alternate text of image
  */
-string WAImage::getAlt() {
-	if (this->alt == nullptr) return string("");
-    return string(this->alt);
+std::string WAImage::getAlt() {
+    return this->_alt;
 }
 
 /**
@@ -46,9 +35,8 @@ string WAImage::getAlt() {
  *
  * @return Title of image
  */
-string WAImage::getTitle() {
-	if (this->title == nullptr) return string("");
-    return string(this->title);
+std::string WAImage::getTitle() {
+    return this->_title;
 }
 
 /**
@@ -57,7 +45,7 @@ string WAImage::getTitle() {
  * @return Width of image
  */
 size_t WAImage::getWidth() {
-    return this->width;
+    return this->_width;
 }
 
 /**
@@ -66,24 +54,20 @@ size_t WAImage::getWidth() {
  * @return Height of image
  */
 size_t WAImage::getHeight() {
-    return this->height;
+    return this->_height;
 }
 
 /**
  * Parsing a input 'img' xml node
  *
+ * @pre		It must be called only one time
  * @param   imgNode XML Node of image
  */
-void WAImage::Parse(xml_node<>* imgNode) {
+void WAImage::parse(xml_node<>* imgNode) {
     // Get attributes
-	xml_attribute<>* tmp = imgNode->first_attribute("src");
-    if (tmp != nullptr) this->src = tmp->value();
-	tmp = imgNode->first_attribute("alt");
-    if (tmp != nullptr) this->alt = tmp->value();
-	tmp = imgNode->first_attribute("title");
-    if (tmp != nullptr) this->title = tmp->value();
-	tmp = imgNode->first_attribute("width");
-    if (tmp != nullptr) this->width = atoi(tmp->value());
-	tmp = imgNode->first_attribute("height");
-    if (tmp != nullptr) this->height = atoi(tmp->value());
+    this->_src = std::string( imgNode->first_attribute("src")->value() );
+    this->_alt = std::string( imgNode->first_attribute("alt")->value() );
+    this->_title = std::string( imgNode->first_attribute("title")->value() );
+    this->_width = atoi(imgNode->first_attribute("width")->value());
+    this->_height = atoi(imgNode->first_attribute("height")->value());
 }

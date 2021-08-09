@@ -36,15 +36,15 @@ std::string WAEngine::getURL(std::string input) {
 /**
  * Parsing data from a external array of char
  *
- * @param   inputData	String containing the data
- * @return				The parsed object indicated by \b inputData
+ * @param[in]   inputData	String containing the data
+ * @return					The parsed object indicated by \b inputData
  */
-WAResult *WAEngine::getResult(std::string inputData) {
+WAResult WAEngine::getResult(std::string inputData) {
     rapidxml::xml_document<> root;
     root.parse<0>((char*)inputData.c_str());
     rapidxml::xml_node<>* query = root.first_node("queryresult");
 
-    return new WAResult(query);
+    return WAResult(query);
 }
 
 /**
@@ -59,7 +59,7 @@ void WAEngine::setTimeout(unsigned int timeout) {
 /**
  * Function called by CUrl on \ref DownloadURL
  */
-static size_t WriteCallback(void *contents, size_t size, size_t nmemb, void *userp) { 
+static size_t WriteCallback(void *contents, size_t size, size_t nmemb, void *userp) {
     size_t realsize = size * nmemb;
 	((std::string*)userp)->append((char*)contents, realsize);
     return realsize;

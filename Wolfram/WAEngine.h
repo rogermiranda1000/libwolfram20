@@ -38,7 +38,7 @@ public:
     WAEngine(std::string appID, std::string server = "api.wolframalpha.com", std::string path = "/v2/query");
 
     std::string getURL(std::string input);
-    WAResult *getResult(std::string inputData);
+    WAResult getResult(std::string inputData);
 	
 	void setTimeout(unsigned int timeout);
 	

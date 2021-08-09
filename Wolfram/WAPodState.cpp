@@ -10,7 +10,7 @@
 #include "WAPodState.h"
 
 WAPodState::WAPodState(rapidxml::xml_node<>* states) {
-    this->Parse(states);
+    this->parse(states);
 }
 
 /**
@@ -19,7 +19,7 @@ WAPodState::WAPodState(rapidxml::xml_node<>* states) {
  * @return Name of image
  */
 std::string WAPodState::getName() {
-    return std::string(name);
+    return this->_name;
 }
 
 /**
@@ -28,7 +28,7 @@ std::string WAPodState::getName() {
  * @return Input of image
  */
 std::string WAPodState::getInput() {
-    return std::string(input);
+    return this->_input;
 }
 
 /**
@@ -36,8 +36,8 @@ std::string WAPodState::getInput() {
  *
  * @param[in]	states	XML Node of state
  */
-void WAPodState::Parse(rapidxml::xml_node<>* states) {
+void WAPodState::parse(rapidxml::xml_node<>* states) {
     // Reading attribute
-    name = states->first_attribute("name")->value();
-    input = states->first_attribute("input")->value();
+    this->_name = std::string( states->first_attribute("name")->value() );
+    this->_input = std::string( states->first_attribute("input")->value() );
 }
