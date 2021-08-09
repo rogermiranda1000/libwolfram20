@@ -7,6 +7,7 @@
  */
 WAResult::WAResult(const WAResult &old) {
 	this->_is_error = old._is_error;
+	this->_error = nullptr;
 	if (old._error != nullptr) this->_error = new WAError(*old._error);
 	this->_dataTypes = old._dataTypes;
 	this->_version = old._version;
@@ -26,12 +27,21 @@ WAResult::WAResult(rapidxml::xml_node<>* query) {
 }
 
 /**
+ * Destructor. It frees the error memory (if any).
+ */
+WAResult::~WAResult() {
+	delete this->_error;
+}
+
+/**
  * Parsing the input \p query
  *
  * @pre 				It must be called only once
  * @param[in]   query	XML Node of query
  */
 void WAResult::parse(rapidxml::xml_node<>* query) {
+	this->_error = nullptr;
+	
 	if (strcmp(query->first_attribute("success")->value(), "false") == 0) {
 		this->_is_error = true;
 		return;
@@ -123,7 +133,7 @@ std::vector<WAPod> WAResult::getPods() {
  * @retval		FALSE	Pod not found
  */
 bool WAResult::getPod(const char *title, WAPod *pod) {
-	vector<WAPod>::iterator it;
+	std::vector<WAPod>::iterator it;
 	for (it = begin(this->_pods); it != end(this->_pods); it++) {
 		std::string cur_title = it->getTitle();
 		if (strcmp(cur_title.c_str(), title) == 0) {

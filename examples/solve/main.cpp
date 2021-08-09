@@ -1,6 +1,6 @@
+#include <iostream>
 #include "WAEngine.h"
 #include "secrets.h" // place here #define APP_ID
-#include <sstream>
 
 int main(int argc, char const *argv[]) {
 	WAEngine searcher(APP_ID);

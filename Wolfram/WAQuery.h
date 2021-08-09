@@ -1,10 +1,11 @@
-/*
- *      WAQuery.h
+/********************************************************************
+ *		@file WAQuery.h
+ *		API query petition manager
  *
- *      Copyright 2011 Nikolenko Konstantin <knikolenko@yandex.ru>
- *		Copyright 2021 Roger Miranda <contacto@rogermiranda1000.com>
- *
- */
+ *      @author 	Nikolenko Konstantin <knikolenko@yandex.ru>
+ *		@author 	Roger Miranda <contacto@rogermiranda1000.com>
+ *		@date		2011-2021
+ *******************************************************************/
 
 #ifndef WAQUERY_H
 #define WAQUERY_H
@@ -14,24 +15,21 @@
 #include <sstream>
 #include <vector>
 
-using std::string;
-using std::vector;
-
 class WAQuery
 {
 public:
     WAQuery();
 
-    string  toString();
+    std::string toString();
 
-    string  getInput();
-    void    setInput(string input);
+    std::string getInput();
+    void setInput(std::string input);
 
-    void    addFormat(string format);
-	void 	addFormat(const char *format);
-    void    clearFormats();
+    void addFormat(std::string format);
+	void addFormat(const char *format);
+    void clearFormats();
 	
-	void	setTimeout(unsigned int value);
+	void setTimeout(unsigned int value);
 
     ////////////  Location-related properties  /////////////
 
@@ -64,20 +62,20 @@ public:
 
     ////////////////  Pod selection  //////////////////
 
-    void    addPodTitle(string podtitle);
-    void    clearPodTitles();
+    void addPodTitle(std::string podtitle);
+    void clearPodTitles();
 
-    void    addPodIndex(int podindex);
-    void    clearPodIndexes();
+    void addPodIndex(int podindex);
+    void clearPodIndexes();
 
-    void    addPodScanner(string podscanner);
-    void    clearPodScanners();
+    void addPodScanner(std::string podscanner);
+    void clearPodScanners();
 
-    void    addIncludePodID(string podid);
-    void    clearIncludePodIDs();
+    void addIncludePodID(std::string podid);
+    void clearIncludePodIDs();
 
-    void    addExcludePodID(string podid);
-    void    clearExcludePodIDs();
+    void addExcludePodID(std::string podid);
+    void clearExcludePodIDs();
 
     ///////////  Assumptions and podstates  ////////////
 
@@ -105,32 +103,33 @@ public:
     */
 
 private:
-
-    // Template for concatenating item vector to string
-    template <typename T> string VectorToStr(const char *prefix, bool individual, vector<T>& t);
-    template <typename T> string VectorToStr(string prefix, bool individual, vector<T>& t);
-	
-	static string parseInput(string str);
-
-    string  input;
+    std::string input;
 	unsigned int timeout;
 
-    string  ip;
-    string  location;
+    std::string ip;
+    std::string location;
     // Objects, not double, so that they can have null == unassigned
-    double  latitude;
-    double  longitude;
+    double latitude;
+    double longitude;
 
-    bool    metric;
-    string  currency;
-    string  countryCode;
+    bool metric;
+    std::string currency;
+    std::string countryCode;
 
-    vector<string>  	formats;
-    vector<string>  	PodTitle;
-    vector<int>     	PodIndexes;
-    vector<string>  	PodScanners;
-    vector<string>  	IncludePodIDs;
-    vector<string>  	ExcludePodIDs;
+    std::vector<std::string> formats;
+    std::vector<std::string> PodTitle;
+    std::vector<int> PodIndexes;
+    std::vector<std::string> PodScanners;
+    std::vector<std::string> IncludePodIDs;
+    std::vector<std::string> ExcludePodIDs;
+	
+	static std::set<char> special_char;				//!< Characters on https://es.wikipedia.org/wiki/C%C3%B3digo_porciento
+	
+    // Template for concatenating item vector to string
+    template <typename T> std::string VectorToStr(const char *prefix, bool individual, std::vector<T>& t);
+    template <typename T> std::string VectorToStr(std::string prefix, bool individual, std::vector<T>& t);
+	
+	static std::string parseInput(std::string str);
 };
 
 /**
@@ -139,8 +138,7 @@ private:
  * @return  Converted string
  */
 template <class T>
-inline std::string to_string (const T& t)
-{
+inline std::string to_string (const T& t) {
     std::stringstream ss;
     ss << t;
     return ss.str();
