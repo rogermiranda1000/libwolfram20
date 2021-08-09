@@ -14,9 +14,9 @@ int main(int argc, char const *argv[]) {
 	}
 	
 	WAResult search = searcher.getResult(contents);
-	WAPod *response = search.getPod("Solution");
-	if (response != nullptr) {
-		std::cout << "Solution: "   << response->getSubpods()[0]->getPlainText() << std::endl;
+	WAPod response;
+	if (search.getPod("Solution", &response)) {
+		std::cout << "Solution: " << response.getSubpods()[0].getPlainText() << std::endl;
 	}
 	
 	return 0;
