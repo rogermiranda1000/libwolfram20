@@ -9,14 +9,14 @@
 #include "WAError.h"
 
 /**
- * C++ error
+ * C++ internal error
  *
  * @param[in]	code		Error code
  * @param[in]	msg			Error message
  */
 WAError::WAError(int code, const char *msg) {
-	this->_msg = std::string(msg);
 	this->_code = code;
+	this->_msg = std::string(msg);
 }
 
 /**

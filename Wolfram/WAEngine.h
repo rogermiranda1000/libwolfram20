@@ -2,7 +2,7 @@
  *		@mainpage	libwolfram20
  *      Library for using Wolfram|Alpha API v2.0
  *
- *      @version 	2.0
+ *      @version 	2.1
  *      @author 	Nikolenko Konstantin <knikolenko@yandex.ru>
  *		@author 	Roger Miranda <contacto@rogermiranda1000.com>
  *		@date		2011-2021
@@ -29,6 +29,7 @@
 #include <rapidxml/rapidxml_utils.hpp>
 
 #include "WAResult.h"
+#include "WAQuery.h"
 
 /**
  * Wolfram API access point

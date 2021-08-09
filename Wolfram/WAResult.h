@@ -27,6 +27,7 @@ class WAResult {
 public:
     WAResult(const WAResult &old);
     WAResult(rapidxml::xml_node<>* query);
+    ~WAResult();
 
     std::vector<WAPod> getPods();
 	bool getPod(const char *title, WAPod *pod);

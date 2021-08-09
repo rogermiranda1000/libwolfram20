@@ -1,12 +1,15 @@
-/*
- *      WAQuery.cpp
+/********************************************************************
+ *		@file WAQuery.cpp
+ *		API query petition manager
  *
- *      Copyright 2011 Nikolenko Konstantin <knikolenko@yandex.ru>
- *		Copyright 2021 Roger Miranda <contacto@rogermiranda1000.com>
- *
- */
+ *      @author 	Nikolenko Konstantin <knikolenko@yandex.ru>
+ *		@author 	Roger Miranda <contacto@rogermiranda1000.com>
+ *		@date		2011-2021
+ *******************************************************************/
 
 #include "WAQuery.h"
+
+std::set<char> WAQuery::special_char = {'!', '#', '$', '&', '\'', '(', ')', '*', '+', ',', '/', ':', ';', '=', '?', '@', '[', ']'};
 
 WAQuery::WAQuery() {
 	this->timeout = 5; // 5s timeout to get the data
@@ -17,8 +20,8 @@ WAQuery::WAQuery() {
  *
  * @return Query
  */
-string WAQuery::toString() {
-    string q = string("&input=") + WAQuery::parseInput(this->input);
+std::string WAQuery::toString() {
+    std::string q = std::string("&input=") + WAQuery::parseInput(this->input);
 
     // Adding a vectors data to string
     q += VectorToStr("&format=",       false, this->formats);
@@ -33,19 +36,14 @@ string WAQuery::toString() {
 }
 
 /**
- *	Characters on https://es.wikipedia.org/wiki/C%C3%B3digo_porciento
- */
-static std::set<char> special_char = {'!', '#', '$', '&', '\'', '(', ')', '*', '+', ',', '/', ':', ';', '=', '?', '@', '[', ']'};
-
-/**
  *	Given an string it creates a copy but with % code
  */
-string WAQuery::parseInput(string str) {
+std::string WAQuery::parseInput(std::string str) {
 	std::stringstream result;
 	
-	string::iterator it;
+	std::string::iterator it;
 	for (it = str.begin(); it < str.end(); it++) {
-		if (special_char.find(*it) != special_char.end()) {
+		if (WAQuery::special_char.find(*it) != WAQuery::special_char.end()) {
 			result << '%';
 			result << std::hex << (int)(*it);
 		}
@@ -61,37 +59,35 @@ string WAQuery::parseInput(string str) {
  *
  * @return Search query string
  */
-string
-WAQuery::getInput()
-{
+std::string WAQuery::getInput() {
     return this->input;
 }
 
 /**
  * Set text for search
  *
- * @param   input   Text for search
+ * @param[in]	input	Text for search
  */
-void WAQuery::setInput(string input) {
+void WAQuery::setInput(std::string input) {
     this->input = input;
 }
 
 /**
  * Adding a string format
  *
- * @param   format String of format
+ * @param[in]	format		String of format
  */
-void WAQuery::addFormat(string format) {
+void WAQuery::addFormat(std::string format) {
     this->formats.push_back(format);
 }
 
 /**
  * Adding a string format
  *
- * @param   format String of format
+ * @param[in]	format		String of format
  */
 void WAQuery::addFormat(const char *format) {
-	this->addFormat(string(format));
+	this->addFormat(std::string(format));
 }
 
 void WAQuery::setTimeout(unsigned int value) {
@@ -102,69 +98,47 @@ void WAQuery::setTimeout(unsigned int value) {
 /**
  * Clear format config
  */
-void
-WAQuery::clearFormats()
-{
+void WAQuery::clearFormats() {
     this->formats.clear();
 }
 
-void
-WAQuery::addPodTitle(string podtitle)
-{
+void WAQuery::addPodTitle(std::string podtitle) {
     this->PodTitle.push_back(podtitle);
 }
 
-void
-WAQuery::clearPodTitles()
-{
+void WAQuery::clearPodTitles() {
     this->PodTitle.clear();
 }
 
-void
-WAQuery::addPodIndex(int podindex)
-{
+void WAQuery::addPodIndex(int podindex) {
     this->PodIndexes.push_back(podindex);
 }
 
-void
-WAQuery::clearPodIndexes()
-{
+void WAQuery::clearPodIndexes() {
     this->PodIndexes.clear();
 }
 
-void
-WAQuery::addPodScanner(string podscanner)
-{
+void WAQuery::addPodScanner(std::string podscanner) {
     this->PodScanners.push_back(podscanner);
 }
 
-void
-WAQuery::clearPodScanners()
-{
+void WAQuery::clearPodScanners() {
     this->PodScanners.clear();
 }
 
-void
-WAQuery::addIncludePodID(string podid)
-{
+void WAQuery::addIncludePodID(std::string podid) {
     this->IncludePodIDs.push_back(podid);
 }
 
-void
-WAQuery::clearIncludePodIDs()
-{
+void WAQuery::clearIncludePodIDs() {
     this->IncludePodIDs.clear();
 }
 
-void
-WAQuery::addExcludePodID(string podid)
-{
+void WAQuery::addExcludePodID(std::string podid) {
     this->ExcludePodIDs.push_back(podid);
 }
 
-void
-WAQuery::clearExcludePodIDs()
-{
+void WAQuery::clearExcludePodIDs() {
     this->ExcludePodIDs.clear();
 }
 /**
@@ -176,8 +150,8 @@ WAQuery::clearExcludePodIDs()
  * @return 	String with concatenated string
  */
 template <typename T>
-string WAQuery::VectorToStr(const char *prefix, bool individual, vector<T>& t) {
-	return this->VectorToStr(string(prefix), individual, t);
+std::string WAQuery::VectorToStr(const char *prefix, bool individual, std::vector<T>& t) {
+	return this->VectorToStr(std::string(prefix), individual, t);
 }
 
 /**
@@ -189,9 +163,9 @@ string WAQuery::VectorToStr(const char *prefix, bool individual, vector<T>& t) {
  * @return 	String with concatenated string
  */
 template <typename T>
-string WAQuery::VectorToStr(string prefix, bool individual, vector<T>& t) {
-    string q("");
-    typename vector<T>::iterator tmpIter;
+std::string WAQuery::VectorToStr(std::string prefix, bool individual, std::vector<T>& t) {
+    std::string q("");
+    typename std::vector<T>::iterator tmpIter;
 
     if (t.size() == 0) return q;
 
@@ -207,7 +181,7 @@ string WAQuery::VectorToStr(string prefix, bool individual, vector<T>& t) {
 
         for (tmpIter = t.begin(); tmpIter < t.end(); tmpIter++) {
             q += to_string(*tmpIter);
-            q += string(",");
+            q += std::string(",");
         }
         q.pop_back(); // Erase last ','
     }

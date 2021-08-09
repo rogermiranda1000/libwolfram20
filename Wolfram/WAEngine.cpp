@@ -30,7 +30,7 @@ WAEngine::WAEngine(std::string appID, std::string server, std::string path) {
  */
 std::string WAEngine::getURL(std::string input) {
 	this->_query.setInput(input);
-    return string("http://") + server + path + string("?appid=") + appID + this->_query.toString();
+    return std::string("http://") + server + path + std::string("?appid=") + appID + this->_query.toString();
 }
 
 /**
