@@ -27,7 +27,14 @@ public:
     int getErrorCode();
 
 private:
-    int _code;								//!< The error code
+	/**
+	 * The error code
+	 * HTTP Status 501: This status is returned if a given input value cannot be interpreted by this API.
+	 * HTTP Status 400: This status indicates that the API did not find an input parameter while parsing.
+	 * Invalid appid (Error 1): This error is returned when a request contains an invalid option for the appid parameter.
+	 * Appid missing (Error 2): This error is returned when a request does not contain any option for the appid parameter.
+	 */
+    int _code;
     std::string _msg;						//!< A short message describing the error
 
     void parse(rapidxml::xml_node<>* error);
