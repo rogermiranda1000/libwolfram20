@@ -57,8 +57,8 @@ void WAEngine::setTimeout(unsigned int timeout) {
 }
 
 /**
- * Function called by CUrl on @ref DownloadURL
- * More information [on CUrl documentation](https://curl.se/libcurl/c/CURLOPT_WRITEFUNCTION.html)
+ * Function called by CUrl on @ref DownloadURL.
+ * More information [on CUrl documentation](https://curl.se/libcurl/c/CURLOPT_WRITEFUNCTION.html).
  *
  * @param[in]	contents	It points to the delivered data
  * @param[in]	size		Always 1

@@ -1,3 +1,12 @@
+/*********************************************************************
+ *		@file WAResult.h
+ *      Wolfram API result
+ *
+ *      @author 	Nikolenko Konstantin <knikolenko@yandex.ru>
+ *		@author 	Roger Miranda <contacto@rogermiranda1000.com>
+ *		@date		2011-2021
+ ********************************************************************/
+
 #ifndef WARESULT_H
 #define WARESULT_H
 
@@ -21,8 +30,8 @@ typedef struct {
 } Timings;
 
 /**
- * Wolfram API result. It contains all the Pods
- * More information [on Wolfram documentation](https://products.wolframalpha.com/api/documentation/#result-queryresult)
+ * Wolfram API result. It contains all the Pods.
+ * More information [on Wolfram documentation](https://products.wolframalpha.com/api/documentation/#result-queryresult).
  */
 class WAResult {
 public:

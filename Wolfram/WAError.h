@@ -15,13 +15,17 @@
 
 /**
  * Wolfram API error element. It contains information about the thrown error.
- * More information [on Wolfram documentation](https://products.wolframalpha.com/api/documentation/#result-error)
+ * More information [on Wolfram documentation](https://products.wolframalpha.com/api/documentation/#result-error).
  */
 class WAError {
 public:
+	/**
+	 * Copy constructor
+	 * @param[in]	old		Object to copy
+	 */
+	WAError(const WAError &old) = default;
 	WAError(int code, const char *msg);
     WAError(rapidxml::xml_node<>* error);
-	WAError(const WAError &old) = default;	//!< Copy constructor
 
     std::string getErrorMessage();
     int getErrorCode();

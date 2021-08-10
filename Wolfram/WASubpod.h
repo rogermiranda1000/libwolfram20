@@ -1,10 +1,11 @@
-/*
- *      WASubpod.h
+/*********************************************************************
+ *		@file WASubpod.h
+ *      Wolfram API subpod
  *
- *      Copyright 2011 Nikolenko Konstantin <knikolenko@yandex.ru>
- *		Copyright 2021 Roger Miranda <contacto@rogermiranda1000.com>
- *
- */
+ *      @author 	Nikolenko Konstantin <knikolenko@yandex.ru>
+ *		@author 	Roger Miranda <contacto@rogermiranda1000.com>
+ *		@date		2011-2021
+ ********************************************************************/
 
 #ifndef WASUBPOD_H
 #define WASUBPOD_H
@@ -19,7 +20,7 @@ using namespace rapidxml;
 
 /**
  * Wolfram API element. It contains information about the pod.
- * More information [on Wolfram documentation](https://products.wolframalpha.com/api/documentation/#result-subpod)
+ * More information [on Wolfram documentation](https://products.wolframalpha.com/api/documentation/#result-subpod).
  */
 class WASubpod
 {
