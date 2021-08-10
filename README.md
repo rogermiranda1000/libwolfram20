@@ -1,6 +1,5 @@
 # libwolfram20
-C++ library for using API Wolfram|Alpha v2.0.
-Version 1.1
+C++ library for using API Wolfram|Alpha v2.1
 
 ## Setup
 - [RapidXML](https://techoverflow.net/2019/04/17/how-to-install-rapidxml-on-ubuntu/)
@@ -14,4 +13,4 @@ Version 1.1
 - [>5s operation](https://github.com/rogermiranda1000/libwolfram20/tree/master/examples/solve-exhaustive)
 
 ## Docs
-- [libwolfram20 documentation](https://rogermiranda1000.com/libwolfram20/annotated.html)
+- [libwolfram20 documentation](https://rogermiranda1000.com/libwolfram20/)

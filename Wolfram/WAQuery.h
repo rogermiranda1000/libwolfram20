@@ -15,6 +15,23 @@
 #include <sstream>
 #include <vector>
 
+/**
+ * Wolfram API's default timeout per query
+ */
+#define DEFAULT_TIMEOUT 5
+
+/**
+ * Latitude/longitude
+ */
+typedef struct {
+	float latitude;			//!< Latitude
+	float longitude;		//!< Longitude
+} Location;
+
+/**
+ * API query petition manager.
+ * More information on [Wolfram documentation](https://products.wolframalpha.com/api/documentation/#parameter-reference).
+ */
 class WAQuery
 {
 public:
@@ -103,29 +120,36 @@ public:
     */
 
 private:
-    std::string input;
-	unsigned int timeout;
+    std::string _input;								//!< Text to search
+	unsigned int _timeout;							//!< The number of seconds to allow Wolfram|Alpha to compute results in the "scan" stage of processing (in general, the most time-consuming stage)
+	// TODO parsetimeout, formattimeout, podtimeout, totaltimeout
 
-    std::string ip;
-    std::string location;
+    /*
+     * NOT REALESED
+     *
+    std::string ip;									//!< Specifies a custom query location based on an IP address
+    std::string location;							//!< Specifies a custom query location based on a string
     // Objects, not double, so that they can have null == unassigned
-    double latitude;
-    double longitude;
+    Location _lat_long;								//!< Specifies a custom query location based on a latitude/longitude pair
 
-    bool metric;
-    std::string currency;
-    std::string countryCode;
+    bool metric;									//!< Lets you specify the preferred measurement system, either "metric" or "nonmetric" (US customary units)
+	
+	// TODO img size attributes
+	*/
 
-    std::vector<std::string> formats;
-    std::vector<std::string> PodTitle;
-    std::vector<int> PodIndexes;
-    std::vector<std::string> PodScanners;
-    std::vector<std::string> IncludePodIDs;
-    std::vector<std::string> ExcludePodIDs;
+	/**
+	 * The desired format for individual result pods
+	 * It can be "image", "imagemap", "plaintext", "minput", "moutput", "cell", "mathml", "sound" and "wav"
+	 */
+    std::vector<std::string> _formats;
+    std::vector<std::string> _podTitle;				//!< Specifies a pod title to include in the result
+    std::vector<int> _podIndexes;					//!< Specifies the index(es) of the pod(s) to return
+    std::vector<std::string> _podScanners;			//!< Specifies that only pods produced by the given scanner should be returned
+    std::vector<std::string> _includePodIDs;		//!< Specifies a pod ID to include in the result
+    std::vector<std::string> _excludePodIDs;		//!< Specifies a pod ID to exclude from the result
 	
-	static std::set<char> special_char;				//!< Characters on https://es.wikipedia.org/wiki/C%C3%B3digo_porciento
+	static std::set<char> _special_char;			//!< Characters on https://es.wikipedia.org/wiki/C%C3%B3digo_porciento
 	
-    // Template for concatenating item vector to string
     template <typename T> std::string VectorToStr(const char *prefix, bool individual, std::vector<T>& t);
     template <typename T> std::string VectorToStr(std::string prefix, bool individual, std::vector<T>& t);
 	
@@ -135,7 +159,8 @@ private:
 /**
  * Template for converting any data to string
  *
- * @return  Converted string
+ * @param[in]	t		Data to convert
+ * @return  			Converted string
  */
 template <class T>
 inline std::string to_string (const T& t) {

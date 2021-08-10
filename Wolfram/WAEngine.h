@@ -44,12 +44,13 @@ public:
 	void setTimeout(unsigned int timeout);
 	
 	static bool DownloadURL(std::string url, std::string *readBuffer);
+	
+	WAQuery query;				//!< Query to make the request
 
 private:
     std::string server;     	//!< Config of WolframAlpha address
     std::string path;       	//!< Config of WolframAlpha address
     std::string appID;      	//!< Config of WolframAlpha address
-	WAQuery _query;				//!< Query to make the request
 };
 
 #endif // WAENGINE_H

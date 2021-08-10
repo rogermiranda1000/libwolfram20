@@ -26,11 +26,11 @@ WAEngine::WAEngine(std::string appID, std::string server, std::string path) {
  * Returns a URL for HTTP request, using the internal WAQuery object
  *
  * @param[in]	input	Text to search
- * @return 				URL to perform the query specified on \p input with the internal arguments of the internal variable \p _query
+ * @return 				URL to perform the query specified on \p input with the internal arguments of the internal variable \p query
  */
 std::string WAEngine::getURL(std::string input) {
-	this->_query.setInput(input);
-    return std::string("http://") + server + path + std::string("?appid=") + appID + this->_query.toString();
+	this->query.setInput(input);
+    return std::string("http://") + server + path + std::string("?appid=") + appID + this->query.toString();
 }
 
 /**
@@ -42,9 +42,9 @@ std::string WAEngine::getURL(std::string input) {
 WAResult WAEngine::getResult(std::string inputData) {
     rapidxml::xml_document<> root;
     root.parse<0>((char*)inputData.c_str());
-    rapidxml::xml_node<>* query = root.first_node("queryresult");
+    rapidxml::xml_node<>* query_xml = root.first_node("queryresult");
 
-    return WAResult(query);
+    return WAResult(query_xml);
 }
 
 /**
@@ -53,12 +53,12 @@ WAResult WAEngine::getResult(std::string inputData) {
  * @param[in]	timeout		Max time that the request can last
  */
 void WAEngine::setTimeout(unsigned int timeout) {
-	this->_query.setTimeout(timeout);
+	this->query.setTimeout(timeout);
 }
 
 /**
- * Function called by CUrl on @ref DownloadURL
- * More information [on CUrl documentation](https://curl.se/libcurl/c/CURLOPT_WRITEFUNCTION.html)
+ * Function called by CUrl on @ref DownloadURL.
+ * More information [on CUrl documentation](https://curl.se/libcurl/c/CURLOPT_WRITEFUNCTION.html).
  *
  * @param[in]	contents	It points to the delivered data
  * @param[in]	size		Always 1
