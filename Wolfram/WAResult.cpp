@@ -1,3 +1,12 @@
+/*********************************************************************
+ *		@file WAResult.cpp
+ *      Wolfram API result
+ *
+ *      @author 	Nikolenko Konstantin <knikolenko@yandex.ru>
+ *		@author 	Roger Miranda <contacto@rogermiranda1000.com>
+ *		@date		2011-2021
+ ********************************************************************/
+
 #include "WAResult.h"
 
 /**
