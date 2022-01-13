@@ -1,6 +1,7 @@
 dist: trusty
 sudo: false
 os: linux
+dist: xenial
 language: cpp
 
 addons:
