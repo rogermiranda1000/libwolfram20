@@ -3,5 +3,8 @@ sudo: false
 os: linux
 language: cpp
 
-script:
+install:
   - examples/build.sh
+
+script:
+  - examples/tests/tests
