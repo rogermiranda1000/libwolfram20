@@ -1,6 +1,7 @@
 dist: trusty
 sudo: false
+os: linux
 language: cpp
 
 script:
-	- examples/build.sh
+  - examples/build.sh
