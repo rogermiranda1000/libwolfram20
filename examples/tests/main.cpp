@@ -17,9 +17,9 @@ std::string exec(const char* cmd) {
 TEST(solve, PrevistedOutput) {
 	ForkedPipeInfo fork_pipe;
 	char *command = (char*)malloc(sizeof(char) * (1 + STATIC_STRING_LEN("../solve/solve")));
-	strcpy(command, "../solve/solve");
+	strcpy(command, "examples/solve/solve"); // POV libwolfram20 root directory
 	
-	EXPECT_EQ(executeProgramLineWithPipe(&fork_pipe, &command, NULL, NULL), 0) << "[e] Error executing 'solve' program";
+	ASSERT_EQ(executeProgramLineWithPipe(&fork_pipe, &command, NULL, NULL), 0) << "[e] Error executing 'solve' program";
 	char *result;
 	readUntil(fdPipeInfo(fork_pipe, 0), &result, '\n'); // discard the first one (Searching ...)
 	readUntil(fdPipeInfo(fork_pipe, 0), &result, '\n'); // get the result
