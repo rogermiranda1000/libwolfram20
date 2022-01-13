@@ -9,7 +9,7 @@ addons:
     packages:
       librapidxml-dev
       libcurl4-openssl-dev
-      gcc
+      g++
     update: true
 
 install:
