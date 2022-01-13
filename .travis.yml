@@ -1,11 +1,18 @@
 dist: trusty
 sudo: true
 os: linux
+dist: focal
 language: cpp
 
+before_install:
+  - sudo apt-get -y install librapidxml-dev
+  - sudo apt-get -y install libcurl-dev
+
+addons:
+  apt:
+    update: true
+
 install:
-  - sudo apt install librapidxml-dev -y
-  - sudo apt-get install libcurl-dev
   - examples/build.sh
 
 script:
