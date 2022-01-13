@@ -4,12 +4,15 @@ os: linux
 dist: xenial
 language: cpp
 
+compiler:
+  - clang
+  - gcc
+
 addons:
   apt:
     packages:
-      librapidxml-dev
-      libcurl4-openssl-dev
-      g++
+      - librapidxml-dev
+      - libcurl4-openssl-dev
     update: true
 
 install:
