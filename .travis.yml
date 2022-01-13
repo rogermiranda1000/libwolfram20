@@ -15,7 +15,7 @@ addons:
     packages:
       - librapidxml-dev
       - libcurl4-openssl-dev
-      - g++-10.3
+      - g++
     update: true
 
 env:
