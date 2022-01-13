@@ -1,9 +1,11 @@
 dist: trusty
-sudo: false
+sudo: true
 os: linux
 language: cpp
 
 install:
+  - sudo apt install librapidxml-dev -y
+  - sudo apt-get install libcurl-dev
   - examples/build.sh
 
 script:
