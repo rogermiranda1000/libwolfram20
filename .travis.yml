@@ -10,13 +10,19 @@ compiler:
 
 addons:
   apt:
+    sources:
+      - ubuntu-toolchain-r-test
     packages:
       - librapidxml-dev
       - libcurl4-openssl-dev
+      - g++-10.3
     update: true
+
+env:
+  - MATRIX_EVAL="CC=gcc-10.3 && CXX=g++-10.3"
 
 install:
   - examples/build.sh
 
 script:
-  - examples/tests/tests
+  - examples/tests/build/tests

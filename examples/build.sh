@@ -2,6 +2,10 @@
 for example in `ls -d $PWD/*/`; do
 	cd "$example"
 	cp ../secrets.h .
-	cmake .
+	
+	mkdir "build"
+	cd "build"
+	
+	cmake ..
 	make
 done

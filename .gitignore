@@ -1,9 +1,4 @@
 examples/*/build/
-examples/*/CMakeFiles/
-examples/*/lib/
-Makefile
-CMakeCache.txt
-*.cmake
 
 secrets.h
 docs/
