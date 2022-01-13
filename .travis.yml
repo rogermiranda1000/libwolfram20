@@ -1,0 +1,6 @@
+dist: trusty
+sudo: false
+language: cpp
+
+script:
+	- examples/build.sh
