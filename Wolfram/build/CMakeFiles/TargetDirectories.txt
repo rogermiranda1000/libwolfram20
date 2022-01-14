@@ -1,0 +1,3 @@
+/home/rogermiranda1000/libwolfram20/Wolfram/build/CMakeFiles/rebuild_cache.dir
+/home/rogermiranda1000/libwolfram20/Wolfram/build/CMakeFiles/edit_cache.dir
+/home/rogermiranda1000/libwolfram20/Wolfram/build/CMakeFiles/Wolfram.dir
