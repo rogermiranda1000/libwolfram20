@@ -1,10 +1,10 @@
 #!/bin/bash
-echo "Scanning "
+echo "#define APP_ID \"$APP_ID\"" > "$PWD/examples"
 for example in `ls -d $PWD/examples/*/`; do # POV libwolfram20 root directory
 	cd "$example"
 	cp ../secrets.h .
 	
-	mkdir "build"
+	mkdir "build" 2>/dev/null
 	cd "build"
 	
 	cmake ..

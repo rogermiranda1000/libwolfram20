@@ -1,28 +1,25 @@
-dist: trusty
+dist: xenial
 sudo: false
 os: linux
-dist: xenial
 language: cpp
-
 compiler:
-  - clang
-  - gcc
-
+- clang
+- gcc
 addons:
   apt:
     sources:
-      - ubuntu-toolchain-r-test
+    - ubuntu-toolchain-r-test
     packages:
-      - librapidxml-dev
-      - libcurl4-openssl-dev
-      - g++
+    - librapidxml-dev
+    - libcurl4-openssl-dev
+    - g++
     update: true
-
 env:
+  matrix:
   - MATRIX_EVAL="CC=gcc-10.3 && CXX=g++-10.3"
-
+  global:
+    secure: YCojgtuI83saVuDpAluv8evMpuA1xe9CNK/UEDMfdAGnHqcdju63PRZeATO4gVr9Q0g82J/hSNtEpk+7PB++/BQZVWnuFs2U/MV0U1IwfRZfwl0rOCenG/qaENDx6DI/xgaXlqEt49106ijZyL2iJLtT4Ghwbzo5KYmr7LAj8P6YrRvC+ah2O7H4uGsxQZjU5TDeYnVat9aRyHQ+y/CPIi2IuSP7cPcMMc/TE3vNJeuQ/9evQBG6Q1LeSvpJhHhkc0Y/eC0r2+W3QtSzcUHhobfdi1hrjNT94kAfxGgeKB9ed/4Y7nZ9BTVuZ9eIiuMJ6QDMiVDi+U0qERl+7By3Wl01iun8TPucSwWbXYTTccGajnOzgTd3Ev+m7B7t9bhoa+DhxrWoapC+8FAmqxMFqNmtC9n0SdbKnq2kLo06axN88C6JQHiN9/ztwDmQG2Ftk5KllBni6B7RGmKQ6AKBbbzloTtPkUvsaJ4qXVQ2ohsedGIeHT/Qb2W3UEFw0KZwQLbPPmgI7MKCTnkLSmOt57P37V9uajEqoe3vgiTTay+zoZGDuJXt11GkMGL+i7mAFFnjha5c5nKQR0iLM9+C43Y0uRN8oH57pBURM6ryWdQDbQpGRNitSSd1DVDN+UilBQi0s1Q8d5ciBYi0u5tsapKoucZDnrxbv/acr9WuSGE=
 install:
-  - ./examples/build.sh
-
+- "./examples/build.sh"
 script:
-  - ./examples/tests/build/tests
+- "./examples/tests/build/tests"
