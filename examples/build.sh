@@ -1,5 +1,12 @@
 #!/bin/bash
+
+# secrets.h
+APP_ID=`printenv APP_ID`
+if [ -z "$APP_ID" ]; then
+	exit 1
+fi
 echo "#define APP_ID \"$APP_ID\"" > "$PWD/examples/secrets.h"
+
 for example in `ls -d $PWD/examples/*/`; do # POV libwolfram20 root directory
 	cd "$example"
 	cp ../secrets.h .; ret=$?
