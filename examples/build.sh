@@ -6,7 +6,7 @@ if [ -z "$APP_ID" ]; then
 	exit 1
 fi
 echo "#define APP_ID \"$APP_ID\"" > "$PWD/examples/secrets.h"
-echo "wc -c $PWD/examples/secrets.h"
+wc -c "$PWD/examples/secrets.h"
 
 for example in `ls -d $PWD/examples/*/`; do # POV libwolfram20 root directory
 	cd "$example"
