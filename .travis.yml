@@ -22,7 +22,7 @@ env:
   - MATRIX_EVAL="CC=gcc-10.3 && CXX=g++-10.3"
 
 install:
-  - examples/build.sh
+  - ./examples/build.sh
 
 script:
-  - examples/tests/build/tests
+  - ./examples/tests/build/tests
