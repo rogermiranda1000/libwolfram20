@@ -1,4 +1,4 @@
-examples/*/build/
+build/
 
 secrets.h
 docs/

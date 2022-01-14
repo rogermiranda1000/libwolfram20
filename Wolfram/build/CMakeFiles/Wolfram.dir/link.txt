@@ -1,2 +1,0 @@
-/usr/bin/ar qc libWolfram.a CMakeFiles/Wolfram.dir/WAEngine.cpp.o CMakeFiles/Wolfram.dir/WAImage.cpp.o CMakeFiles/Wolfram.dir/WAPod.cpp.o CMakeFiles/Wolfram.dir/WAPodState.cpp.o CMakeFiles/Wolfram.dir/WAQuery.cpp.o CMakeFiles/Wolfram.dir/WASubpod.cpp.o CMakeFiles/Wolfram.dir/WAResult.cpp.o CMakeFiles/Wolfram.dir/WAError.cpp.o
-/usr/bin/ranlib libWolfram.a
