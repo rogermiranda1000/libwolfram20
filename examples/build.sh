@@ -1,5 +1,5 @@
 #!/bin/bash
-for example in `ls -d $PWD/*/`; do
+for example in `ls -d "$PWD/examples/*/"`; do # POV libwolfram20 root directory
 	cd "$example"
 	cp ../secrets.h .
 	
