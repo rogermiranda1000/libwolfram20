@@ -19,18 +19,26 @@ std::string fdToString(int fd) {
 std::string flushFd(ForkedPipeInfo fork_pipe) {
 	std::stringstream r;
 	
-	for (size_t n = 0; n < fork_pipe.pipe_num; n++) {
-		r << "-- FD " << n << " --" << std::endl;
-		r << fdToString(fdPipeInfo(fork_pipe, n));
-	}
+	r << "-- cout --" << std::endl;
+	r << fdToString(fdPipeInfo(fork_pipe, 1));
+	r << "-- cerr --" << std::endl;
+	r << fdToString(fdPipeInfo(fork_pipe, 2));
 	
 	return r.str();
 }
 
+char *getExamplePath(char *example) {
+	char *command = (char*)malloc(sizeof(char) * (1 + STATIC_STRING_LEN("examples//build/") + 2*strlen(example))); // POV libwolfram20 root directory
+	strcpy(command, "examples/");
+	strcat(command, example);
+	strcat(command, "/build/");
+	strcat(command, example);
+	return command;
+}
+
 TEST(solve, PrevistedOutput) {
 	ForkedPipeInfo fork_pipe;
-	char *command = (char*)malloc(sizeof(char) * (1 + STATIC_STRING_LEN("../solve/build/solve")));
-	strcpy(command, "examples/solve/solve"); // POV libwolfram20 root directory
+	char *command = getExamplePath("solve");
 	
 	ASSERT_EQ(executeProgramLineWithPipe(&fork_pipe, &command, NULL, NULL), 0) << "[e] Error executing 'solve' program" << std::endl << flushFd(fork_pipe);
 	char *result;
