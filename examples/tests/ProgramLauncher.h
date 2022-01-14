@@ -81,6 +81,19 @@ size_t readUntil(int fd, char **buffer, char delimiter) {
 }
 
 /**
+ * It discards characters until it find 'delimiter' (included).
+ * @param fd 		FileDescriptor to read
+ * @param delimiter	Target character
+ * @param			Number of characters removed
+ */
+size_t discard(int fd, char delimiter) {
+	char *tmp;
+	size_t r = readUntil(fd, &tmp, delimiter);
+	free(tmp);
+	return r;
+}
+
+/**
  * Crea una copia del codi. El fill crida son_call i finalitza la execució,
  * mentre que al pare simplement se li retorna el PID del fill.
  * Si es vol cridar una funció en cas d'error es pot utilitzar error_call.
@@ -200,7 +213,7 @@ int fdPipeInfo(ForkedPipeInfo info, size_t index) {
  * @param envp	Array de variables d'usuari
  */
 int runCommandWithPipe(ForkedPipeInfo info, char *cmd, char *argv[], char *envp[]) {
-	if (dup2(fdPipeInfo(info, 0), 1) == -1) exit(1); // clona el FD de sortida per pantalla cap a la pipe del fork
+	if (dup2(fdPipeInfo(info, 0), 0) == -1 || dup2(fdPipeInfo(info, 1), 1) == -1 || dup2(fdPipeInfo(info, 2), 2) == -1) exit(1); // clona el FD de sortida per pantalla cap a la pipe del fork
 	exit(execvpe(cmd, argv, envp));
 }
 
@@ -224,7 +237,7 @@ int executeProgramWithPipe(ForkedPipeInfo *pipe_info, char *cmd, char *argv[], c
 	//strcat(absolute_cmd, cmd);
 	strcpy(absolute_cmd, cmd);
 	
-	*pipe_info = PIPED_FORK(getForkedPipeInfo(1, PIPE_READ), freeMallocs,, runCommandWithPipe, /* arguments: */ absolute_cmd, argv, envp);
+	*pipe_info = PIPED_FORK(getForkedPipeInfo(3, PIPE_WRITE, PIPE_READ, PIPE_READ), freeMallocs,, runCommandWithPipe, /* arguments: */ absolute_cmd, argv, envp);
 	if (pipe_info->other_pid != CREATE_FORK_ERROR) {
 		if (waitpid(pipe_info->other_pid, &r, WUNTRACED | WCONTINUED) == -1) r = WAIT_FORK_ERROR;
 	}
