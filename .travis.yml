@@ -2,9 +2,7 @@ dist: xenial
 sudo: false
 os: linux
 language: cpp
-compiler:
-- cmake
-- gcc
+compiler: gcc
 addons:
   apt:
     sources:
