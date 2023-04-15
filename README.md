@@ -1,5 +1,6 @@
 # libwolfram20
 [![Build Status](https://app.travis-ci.com/rogermiranda1000/libwolfram20.svg?branch=master)](https://app.travis-ci.com/rogermiranda1000/libwolfram20)
+[![CodeFactor](https://www.codefactor.io/repository/github/rogermiranda1000/libwolfram20/badge)](https://www.codefactor.io/repository/github/rogermiranda1000/libwolfram20)
 
 C++ library for using API Wolfram|Alpha v2.1
 
